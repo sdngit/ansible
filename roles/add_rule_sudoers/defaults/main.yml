@@ -4,4 +4,4 @@
 sudo_users: []
 sudo_commands: []
 run_as: root
-nopasswd: false
+nopasswd: true

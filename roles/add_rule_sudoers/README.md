@@ -2,13 +2,15 @@ Role Name
 =========
 
 Add sudo rights to the user.
-Добавить права sudo пользователю.
+
+Добавить пользователю права sudo.
 
 
 Requirements
 ------------
 
 Add to file ansible.cfg
+
 Добавить в файл ansible.cfg
 
     [defaults]
@@ -32,6 +34,16 @@ run_as        - from which user or group to run commands (от какого по
 
 nopasswd      - don't ask for password for sudo (не спрашивать пароль для sudo). Default: false.
 
+- ==sudo_users== - list of users for whom rights are configured (список пользователей, для которых настраиваются права).
+  Mandatory.
+  Default: [];
+- ==sudo_commands== - list of commands allowed to the user (список команд, разрешенных пользователю).
+  Mandatory.
+  Default: [];
+- ==run_as== - from which user or group to run commands (от какого пользователя или группы запускать команды).
+  Default: root;
+- ==nopasswd== - don't ask for password for sudo (не спрашивать пароль для sudo).
+  Default: false.
 
 Dependencies
 ------------

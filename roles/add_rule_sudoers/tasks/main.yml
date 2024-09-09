@@ -7,5 +7,5 @@
     state: directory
     mode: '0750'
 
-- name: Include task done_using_template_file.yml
-  include_tasks: tasks/done_using_template_file.yml
+- name: Include task mod_lineinfile.yml
+  include_tasks: tasks/mod_lineinfile.yml
