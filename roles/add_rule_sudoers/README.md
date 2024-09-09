@@ -10,7 +10,7 @@ Requirements
 
 Add to file ansible.cfg \
 Добавить в файл ansible.cfg
-
+```ini
     [defaults]
     stdout_callback=community.general.diy
 
@@ -19,7 +19,7 @@ Add to file ansible.cfg \
     # If neither are supplied, omit the option
     runner_on_skipped_msg="{{ on_skipped_msg | default(ansible_callback_diy_runner_on_skipped_msg) | default(omit) }}"
     runner_on_skipped_msg_color="{{ on_skipped_msg_color | default(ansible_callback_diy_runner_on_skipped_msg_color) | default('cyan') }}"
-
+```
 
 Role Variables
 --------------
@@ -45,18 +45,20 @@ Example Playbook
 ----------------
 
 File playbook:
-
+```yaml
     - hosts: all
       gather_facts: false
       become: yes
       roles:
         - role: add_rule_sudoers
+```
 
-Run: \
-ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"], "run_as":ALL, "nopasswd":true}' \
-ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"]}' \
-ansible-playbook -i inventory.yml add_sudo.yml -e '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"]}' --connection=local --check
-
+Run:
+```bash
+$ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"], "run_as":ALL, "nopasswd":true}'
+$ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"]}'
+$ ansible-playbook -i inventory.yml add_sudo.yml -e '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"]}' --connection=local --check
+```
 
 License
 -------
