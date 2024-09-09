@@ -18,7 +18,6 @@ Add to file ansible.cfg
     # If neither are supplied, omit the option
     runner_on_skipped_msg="{{ on_skipped_msg | default(ansible_callback_diy_runner_on_skipped_msg) | default(omit) }}"
     runner_on_skipped_msg_color="{{ on_skipped_msg_color | default(ansible_callback_diy_runner_on_skipped_msg_color) | default('cyan') }}"
-...
 
 Role Variables
 --------------
@@ -43,7 +42,6 @@ Including an example of how to use your role (for instance, with variables passe
       become: yes
       roles:
         - role: add_rule_sudoers
-...
 
 ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"], "run_as":ALL, "nopasswd":true}'
 ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"]}'

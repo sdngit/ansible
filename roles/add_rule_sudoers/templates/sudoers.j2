@@ -1,1 +1,1 @@
-{{ item }} ALL=({{ run_as }}) NOPASSWD: {{ sudo_commands_uniq | join(', ') }}
+{{ item }} ALL=({{ run_as }}) {{ (nopasswd == true) | ternary("NOPASSWD:","") }} {{ sudo_commands_uniq | join(', ') }}
