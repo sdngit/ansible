@@ -1,0 +1,7 @@
+---
+- name: Add sudo rights to the user
+  hosts: all
+  gather_facts: false
+  become: yes
+  roles:
+    - role: add_rule_sudoers

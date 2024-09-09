@@ -1,0 +1,17 @@
+---
+- name: Deploy sudoers file for each user
+  vars:
+    sudo_users_uniq: "{{ sudo_users | unique }}"
+    sudo_commands_uniq: "{{ sudo_commands | unique }}"
+    on_skipped_msg: |
+      Vars:
+      sudo_users: {{ sudo_users }}
+      sudo_commands:{{ sudo_commands }}
+    on_skipped_msg_color: "yellow"
+  template:
+    src: sudoers.j2
+    dest: "/etc/sudoers.d/{{ item | replace('.','_') | replace('%','') }}"
+    mode: '0440'
+  loop: "{{ sudo_users_uniq }}"
+  when: (sudo_users is defined and sudo_users | length > 0) and
+    (sudo_commands is defined and sudo_commands | length > 0)

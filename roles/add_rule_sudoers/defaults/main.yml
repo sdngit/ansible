@@ -1,0 +1,7 @@
+---
+# defaults file for add_rule_sudoers
+
+sudo_users: []
+sudo_commands: []
+run_as: root
+nopasswd: false

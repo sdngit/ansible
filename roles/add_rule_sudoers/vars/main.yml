@@ -1,0 +1,13 @@
+---
+# vars file for add_rule_sudoers
+
+# sudo_users:
+#   - user1
+#   - user2
+#   - user1
+
+# sudo_commands:
+#   - /usr/bin/cat
+#   - /usr/bin/ls
+#   - /usr/bin/nano
+#   - /usr/bin/cat
