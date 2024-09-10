@@ -53,11 +53,42 @@ File playbook:
         - role: add_rule_sudoers
 ```
 
+File variables:
+```YAML
+    sudo_users:
+        - user1
+        - user2
+    sudo_commands:
+        - '/usr/bin/cat'
+        - '/usr/bin/ls'
+    run_as: "ALL"
+    nopasswd: true
+```
+```JSON
+some_file.json
+    {
+        "sudo_users": [
+            "user1",
+            "user2"
+        ],
+        "sudo_commands": [
+            "/usr/bin/cat",
+            "/usr/bin/ls"
+        ],
+        "run_as": "ALL",
+        "nopasswd": true
+    }
+```
+
 Run:
 ```bash
-$ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"], "run_as":ALL, "nopasswd":true}'
-$ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"]}'
-$ ansible-playbook -i inventory.yml add_sudo.yml -e '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"]}' --connection=local --check
+    $ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"], "run_as":ALL, "nopasswd":true}'
+    $ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"]}'
+    # Vars from a JSON or YAML file
+    $ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars "@some_file.yaml"
+    $ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars "@some_file.json"
+    # Local test
+    $ ansible-playbook -i inventory.yml add_sudo.yml -e '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"]}' --connection=local --check
 ```
 
 License
