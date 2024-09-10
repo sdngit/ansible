@@ -54,6 +54,8 @@ File playbook:
 ```
 
 File variables:
+
+some_file.yaml
 ```YAML
     sudo_users:
         - user1
@@ -64,8 +66,8 @@ File variables:
     run_as: "ALL"
     nopasswd: true
 ```
-```JSON
 some_file.json
+```JSON
     {
         "sudo_users": [
             "user1",
