@@ -55,7 +55,7 @@ File playbook:
 
 File variables:
 
-some_file.yaml
+some_file.yml
 ```YAML
     sudo_users:
         - user1
@@ -87,7 +87,7 @@ Run:
     $ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"], "run_as":ALL, "nopasswd":true}'
     $ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"]}'
     # Vars from a JSON or YAML file
-    $ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars "@some_file.yaml"
+    $ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars "@some_file.yml"
     $ ansible-playbook -i inventory.yml add_sudo.yml --extra-vars "@some_file.json"
     # Local test
     $ ansible-playbook -i inventory.yml add_sudo.yml -e '{"sudo_users":["user1","user2"], "sudo_commands":["/usr/bin/cat","/usr/bin/ls"]}' --connection=local --check
