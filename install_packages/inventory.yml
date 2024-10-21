@@ -1,0 +1,5 @@
+all:
+  hosts:
+    server1:
+      ansible_host: 192.168.0.137
+      server_name: server1.test.local
