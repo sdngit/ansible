@@ -1,0 +1,10 @@
+---
+- name: Check variable
+  fail:
+    msg: "Variable is undefined or empty."
+  when: packages is undefined or packages | length <= 0
+
+- name: Install
+  ansible.builtin.package:
+    name: "{{ packages }}"
+    state: present
