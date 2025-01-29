@@ -1,0 +1,7 @@
+---
+- name: Configure sssd
+  hosts: all
+  gather_facts: false
+  become: yes
+  roles:
+    - role: configure_sssd
