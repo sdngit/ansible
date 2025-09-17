@@ -18,19 +18,28 @@
   ansible.builtin.package:
     name: chrony
     state: present
-  notify: Restart chronyd
+  register: dadl_result_install_chrony
 
-- name: Copy template chrony.conf
+- name: Set chrony.conf
   ansible.builtin.template:
     src: chrony.conf.j2
     dest: /etc/chrony.conf
     owner: root
     group: root
     mode: 0640
-  notify: Restart chronyd
+  register: dadl_result_set_chrony
 
 - name: Enable and start chronyd.service
   ansible.builtin.service:
     name: chronyd
     enabled: true
     state: started
+
+- name: Restart chronyd
+  ansible.builtin.service:
+    name: chronyd
+    daemon-reload: true
+    state: restarted
+  when: >
+    dadl_result_install_chrony.changed == true or
+    dadl_result_set_chrony.changed == true

@@ -1,1 +1,4 @@
 ---
+#dadl_domain_name: "{{ inventory_hostname.split('.')[1] }}.{{ inventory_hostname.split('.')[2] }}"
+
+dadl_domain_name: test.alt

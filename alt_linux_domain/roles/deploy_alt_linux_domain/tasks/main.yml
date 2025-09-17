@@ -19,6 +19,9 @@
   import_tasks: configure_bind.yml
   tags: dald_configure_bind
 
+- name: Create domain
+  import_tasks: create_domain.yml
+  tags: dald_create_domain
 
 # - name: Test
 #   import_tasks: test.yml

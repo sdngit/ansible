@@ -1,7 +1,15 @@
 ---
-dadl_domain_name: test.alt
-
+# Разворачивается Primary или Secondary DC
 dadl_primary_dc: true
+
+# Уровень домена и леса
+dadl_domain_function_level: 2016
+
+# Версия базовой схемы домена
+dadl_base_schema: 2019
+
+dadl_adminpass: 'QwR!e6rty@12'
+
 dadl_primary_dc_ip: 192.168.0.51
 
 dald_ntp_servers:
@@ -33,5 +41,6 @@ dadl_dns_servers:
   - 192.168.0.1
   - 8.8.8.8
 
+# Разрешённые подсети для DNS-запросов. В том числе для рекурсивных запросов
 dald_allowed_dns_clients:
   - 192.168.0.0/24
