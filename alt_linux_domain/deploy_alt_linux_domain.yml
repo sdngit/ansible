@@ -1,0 +1,5 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - deploy_alt_linux_domain

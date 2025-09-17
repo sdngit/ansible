@@ -1,0 +1,6 @@
+---
+- name: Restart chronyd
+  ansible.builtin.service:
+    name: chronyd
+    daemon-reload: true
+    state: restarted

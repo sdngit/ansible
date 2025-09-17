@@ -1,0 +1,9 @@
+---
+- name: Create file
+  file:
+    path: "/tmp/{{ inventory_hostname }}"
+    owner: root
+    group: root
+    mode: 0777
+    state: touch
+  tags: test

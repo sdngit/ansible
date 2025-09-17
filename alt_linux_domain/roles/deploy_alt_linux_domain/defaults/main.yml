@@ -1,0 +1,37 @@
+---
+dadl_domain_name: test.alt
+
+dadl_primary_dc: true
+dadl_primary_dc_ip: 192.168.0.51
+
+dald_ntp_servers:
+  - ntp.msk-ix.ru
+  - ntp1.vniiftri.ru
+  - ntp2.vniiftri.ru
+  - ntp3.vniiftri.ru
+  - ntp4.vniiftri.ru
+  - ntp5.vniiftri.ru
+
+dald_allowed_ntp_clients:
+  - 192.168.0.0/16
+
+dadl_install_packages:
+  - task-samba-dc-mitkrb5
+  - bind
+  - bind-utils
+
+dadl_stop_services:
+  - smb.service
+  - nmb.service
+  - krb5kdc.service
+  - slapd.service
+  - bind.service
+
+dadl_net_ifaces: eth0
+
+dadl_dns_servers:
+  - 192.168.0.1
+  - 8.8.8.8
+
+dald_allowed_dns_clients:
+  - 192.168.0.0/24

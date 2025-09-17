@@ -1,0 +1,36 @@
+---
+- name: Remove NTPD
+  ansible.builtin.package:
+    name: ntp
+    state: absent
+
+- name: Stop Systemd-timesyncd
+  ansible.builtin.service:
+    name: systemd-timesyncd
+    enabled: false
+    state: stopped
+  register: dald_result_stop_systemd_timesyncd
+  failed_when:
+    - dald_result_stop_systemd_timesyncd.failed == true
+    - '"Could not find the requested service systemd-timesyncd" not in dald_result_stop_systemd_timesyncd.msg'
+
+- name: Install Chrony
+  ansible.builtin.package:
+    name: chrony
+    state: present
+  notify: Restart chronyd
+
+- name: Copy template chrony.conf
+  ansible.builtin.template:
+    src: chrony.conf.j2
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: 0640
+  notify: Restart chronyd
+
+- name: Enable and start chronyd.service
+  ansible.builtin.service:
+    name: chronyd
+    enabled: true
+    state: started
