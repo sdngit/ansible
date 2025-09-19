@@ -17,3 +17,6 @@ dald_admin_AD_username: "{{ cli_admin_AD_username }}"
 #dald_admin_AD_username: administrator
 #dald_admin_AD_pass: "{{ cli_admin_AD_pass }}"
 dald_admin_AD_pass: 'Qwerty12@'
+
+# Получить IP адреса хостов группы из inventory файла
+dald_list_dc: "{{ groups['alt_dc'] | map('extract', hostvars, ['ansible_host']) | select('defined') | list }}"

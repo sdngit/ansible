@@ -2,14 +2,14 @@
 # Разворачивается Primary или Secondary DC
 dald_primary_dc: false
 
+# Адрес существующего домена
+dald_primary_dc_ip: 192.168.0.51
+
 # Уровень домена и леса
 dald_domain_function_level: 2016
 
 # Версия базовой схемы домена
 dald_base_schema: 2019
-
-dald_primary_dc_ip: 192.168.0.51
-dald_list_dc: "{{ groups['alt_dc'] | map('extract', hostvars, ['ansible_host']) | select('defined') | list }}"
 
 dald_ntp_servers:
   - ntp.msk-ix.ru
@@ -22,6 +22,7 @@ dald_ntp_servers:
 dald_allowed_ntp_clients:
   - 192.168.0.0/16
 
+# Сетевой интерфейс требуется для настройки DNS
 dald_net_ifaces: eth0
 
 dald_dns_forward_servers:
