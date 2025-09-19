@@ -1,0 +1,34 @@
+---
+# Разворачивается Primary или Secondary DC
+dald_primary_dc: false
+
+# Адрес существующего домена
+dald_primary_dc_ip: 192.168.0.51
+
+# Уровень домена и леса
+dald_domain_function_level: 2016
+
+# Версия базовой схемы домена
+dald_base_schema: 2019
+
+dald_ntp_servers:
+  - ntp.msk-ix.ru
+  - ntp1.vniiftri.ru
+  - ntp2.vniiftri.ru
+  - ntp3.vniiftri.ru
+  - ntp4.vniiftri.ru
+  - ntp5.vniiftri.ru
+
+dald_allowed_ntp_clients:
+  - 192.168.0.0/16
+
+# Сетевой интерфейс требуется для настройки DNS
+dald_net_ifaces: eth0
+
+dald_dns_forward_servers:
+  - 192.168.0.1
+  - 8.8.8.8
+
+# Разрешённые подсети для DNS-запросов. В том числе для рекурсивных запросов
+dald_allowed_dns_clients:
+  - 192.168.0.0/24

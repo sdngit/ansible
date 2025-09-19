@@ -1,0 +1,19 @@
+---
+# Так как Samba в режиме контроллера домена (Domain Controller, DC)
+# использует свой сервер LDAP, свой центр распределения ключей KDC
+# (сервер Kerberos) и свой сервер DNS (если не включен плагин BIND9_DLZ),
+# перед установкой остановите конфликтующие службы krb5kdc и slapd, а также bind.
+#
+# При использовании плагина BIND9_DLZ службу bind после создания домена потребуется включить.
+# https://www.altlinux.org/ActiveDirectory/DC
+
+- name: Populate service facts
+  ansible.builtin.service_facts:
+
+- name: Stop {{ dald_stop_services }}
+  ansible.builtin.service:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  loop: "{{ dald_stop_services }}"
+  when: ansible_facts.services[item] is defined

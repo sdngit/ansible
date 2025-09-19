@@ -10,10 +10,6 @@ Role Description
 > [!CAUTION]
 > Тестировалось только на Alt Linux 11.
 
-> [!NOTE]
-> https://docs.altlinux.org/ru-RU/alt-domain/11.0/html/alt-domain/
-> https://www.altlinux.org/ActiveDirectory/DC
-
 1. Назначет имя в соответствии с `inventory`.
 2. Настраивает DNS.
 3. Создает новый домен или добавляет к существующему.

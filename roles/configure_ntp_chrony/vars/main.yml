@@ -1,0 +1,22 @@
+---
+dald_domain_name: "{{ inventory_hostname.split('.')[1] }}.{{ inventory_hostname.split('.')[2] }}"
+
+dald_install_packages:
+  - task-samba-dc-mitkrb5
+  - bind
+  - bind-utils
+
+dald_stop_services:
+  - smb.service
+  - nmb.service
+  - krb5kdc.service
+  - slapd.service
+  - bind.service
+
+dald_admin_AD_username: "{{ cli_admin_AD_username }}"
+#dald_admin_AD_username: administrator
+#dald_admin_AD_pass: "{{ cli_admin_AD_pass }}"
+dald_admin_AD_pass: 'Qwerty12@'
+
+# Получить IP адреса хостов группы из inventory файла
+dald_list_dc: "{{ groups['alt_dc'] | map('extract', hostvars, ['ansible_host']) | select('defined') | list }}"
