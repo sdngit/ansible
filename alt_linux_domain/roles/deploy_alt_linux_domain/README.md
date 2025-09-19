@@ -3,8 +3,8 @@ Role Description
 
 Роль `deploy_alt_linux_domain`.
 
-Разворачивает Samba домен на Alt Linux 11.
-При запуске плэйбука будут запрошены логин администратора (по умолчанию "administrator") и пароль.
+Разворачивает Samba домен на Alt Linux 11.\
+При запуске плэйбука будут запрошены логин администратора (по умолчанию "administrator") и пароль.\
 При создании нового домена автоматически создается учетная запись с именем "administrator". Изменить это поведение нельзя.
 
 
@@ -41,42 +41,42 @@ Example Playbook
 
 File playbook:
 ```yaml
-    - hosts: all
-      become: true
-      vars_prompt:
-      - name: cli_admin_AD_username
-        prompt: Enter the administrator AD username
-        private: false
-        default: "administrator"
+- hosts: all
+  become: true
+  vars_prompt:
+  - name: cli_admin_AD_username
+    prompt: Enter the administrator AD username
+    private: false
+    default: "administrator"
 
-      - name: cli_admin_AD_pass
-        prompt: Enter the administrator AD password
-        unsafe: true
-        private: true
+  - name: cli_admin_AD_pass
+    prompt: Enter the administrator AD password
+    unsafe: true
+    private: true
 
-      - name: cli_admin_AD_pass_retype
-        prompt: Re-type password
-        unsafe: true
-        private: true
+  - name: cli_admin_AD_pass_retype
+    prompt: Re-type password
+    unsafe: true
+    private: true
 
-      roles:
-        - deploy_alt_linux_domain
+  roles:
+    - deploy_alt_linux_domain
 ```
 
 File variables:
 
 some_file.yml
 ```YAML
-    dald_primary_dc: true
-    dald_domain_function_level: 2016
-    dald_net_ifaces: eth0
-    dald_dns_forward_servers:
-        - 192.168.0.1
-        - 8.8.8.8
-    dald_allowed_dns_clients:
-        - 192.168.0.0/24
-        - 192.168.1.0/24
-        - 192.168.3.0/24
+dald_primary_dc: true
+dald_domain_function_level: 2016
+dald_net_ifaces: eth0
+dald_dns_forward_servers:
+    - 192.168.0.1
+    - 8.8.8.8
+dald_allowed_dns_clients:
+    - 192.168.0.0/24
+    - 192.168.1.0/24
+    - 192.168.3.0/24
 ```
 
 Run:
