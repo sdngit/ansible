@@ -1,16 +1,15 @@
 ---
 # Разворачивается Primary или Secondary DC
-dadl_primary_dc: true
+dald_primary_dc: false
 
 # Уровень домена и леса
-dadl_domain_function_level: 2016
+dald_domain_function_level: 2016
 
 # Версия базовой схемы домена
-dadl_base_schema: 2019
+dald_base_schema: 2019
 
-dadl_adminpass: 'QwR!e6rty@12'
-
-dadl_primary_dc_ip: 192.168.0.51
+dald_primary_dc_ip: 192.168.0.51
+dald_list_dc: "{{ groups['alt_dc'] | map('extract', hostvars, ['ansible_host']) | select('defined') | list }}"
 
 dald_ntp_servers:
   - ntp.msk-ix.ru
@@ -23,21 +22,9 @@ dald_ntp_servers:
 dald_allowed_ntp_clients:
   - 192.168.0.0/16
 
-dadl_install_packages:
-  - task-samba-dc-mitkrb5
-  - bind
-  - bind-utils
+dald_net_ifaces: eth0
 
-dadl_stop_services:
-  - smb.service
-  - nmb.service
-  - krb5kdc.service
-  - slapd.service
-  - bind.service
-
-dadl_net_ifaces: eth0
-
-dadl_dns_servers:
+dald_dns_forward_servers:
   - 192.168.0.1
   - 8.8.8.8
 

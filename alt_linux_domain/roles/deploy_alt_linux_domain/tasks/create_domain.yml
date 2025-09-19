@@ -1,55 +1,46 @@
 ---
 - name: Check if the DC already exists
-  command: samba-tool domain info 127.0.0.1
-  register: dadl_result_check_dc
+  ansible.builtin.command: samba-tool domain info 127.0.0.1
+  register: dald_result_check_dc
   ignore_errors: true
 
 - name: DC already exists
-  fail:
+  ansible.builtin.fail:
     msg: DC already exists
-  when: dadl_result_check_dc.rc == 0
+  when: dald_result_check_dc.rc == 0
 
-- block:
-  - name: Backup /etc/samba/smb.conf to /etc/samba/smb.conf.bkp
-    copy:
-      src: /etc/samba/smb.conf
-      dest: /etc/samba/smb.conf.bkp
-      remote_src: true
-      force: true
+- name: Check file existence /etc/samba/smb.conf
+  ansible.builtin.stat:
+    path: /etc/samba/smb.conf
+  register: dald_result_file_smb
 
-  - name: Remove file /etc/samba/smb.conf
-    ansible.builtin.file:
-      path: /etc/samba/smb.conf
-      state: absent
+- name: Backup /etc/samba/smb.conf to /etc/samba/smb.conf.bkp
+  ansible.builtin.copy:
+    src: /etc/samba/smb.conf
+    dest: /etc/samba/smb.conf.bkp
+    remote_src: true
+    force: true
+  when: dald_result_file_smb.stat.exists
 
-  - name: Create domain
-    command: >
-      samba-tool domain provision
-        --realm={{ dadl_domain_name }}
-        --domain={{ dadl_domain_name.split('.')[0] }}
-        --adminpass={{ dadl_adminpass }}
-        --dns-backend=BIND9_DLZ
-        --option="ad dc functional level = {{ dadl_domain_function_level }}"
-        --server-role=dc
-        --function-level={{ dadl_domain_function_level }}
-        --base-schema={{ dadl_base_schema }}
-    register: dadl_result_create_domain
+- name: Remove file /etc/samba/smb.conf
+  ansible.builtin.file:
+    path: /etc/samba/smb.conf
+    state: absent
+  when: dald_result_file_smb.stat.exists
 
-  - name: Copy /var/lib/samba/private/krb5.conf to /etc/krb5.conf
-    copy:
-      src: /var/lib/samba/private/krb5.conf
-      dest: /etc/krb5.conf
-      remote_src: true
-      force: true
-      backup: true
+- name: Create primary DC
+  import_tasks: create_primary_dc.yml
+  when: dald_primary_dc | bool == true
 
-  - name: Start services samba and bind
-    ansible.builtin.service:
-      name: "{{ item }}"
-      enabled: true
-      state: started
-    loop:
-      - samba
-      - bind
+- name: Join secondary DC to domain
+  import_tasks: join_secondary_dc_to_domain.yml
+  when: dald_primary_dc | bool == false
 
-  when: dadl_result_check_dc.failed == true
+- name: Start services samba and bind
+  ansible.builtin.service:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - samba
+    - bind

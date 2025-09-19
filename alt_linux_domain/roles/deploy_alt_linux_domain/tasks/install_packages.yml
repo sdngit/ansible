@@ -1,5 +1,5 @@
 ---
 - name: Install packages
   ansible.builtin.package:
-    name: "{{ dadl_install_packages }}"
+    name: "{{ dald_install_packages }}"
     state: present

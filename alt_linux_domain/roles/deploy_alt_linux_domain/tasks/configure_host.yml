@@ -3,31 +3,40 @@
   ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
     use: systemd
-  register: dadl_result_set_hostname
+  register: dald_result_set_hostname
 
 - name: Unconditionally reboot the machine with all defaults
   ansible.builtin.reboot:
     reboot_timeout: 600
-  when: dadl_result_set_hostname.changed == true
+  when: dald_result_set_hostname.changed == true
 
 - name: Set DNS
   ansible.builtin.template:
     src: templates/resolv.conf.j2
-    dest: "/etc/net/ifaces/{{ dadl_net_ifaces }}/resolv.conf"
+    dest: "/etc/net/ifaces/{{ dald_net_ifaces }}/resolv.conf"
     owner: root
     group: root
     mode: 0644
-  register: dadl_result_set_dns
+  register: dald_result_set_dns
 
 - name: Set resolvconf
   ansible.builtin.lineinfile:
     path: /etc/resolvconf.conf
     regexp: '^name_servers='
     line: name_servers=127.0.0.1
-  register: dadl_result_set_resolvconf
+  register: dald_result_set_resolvconf
+  when: dald_primary_dc | bool == true
+
+- name: Restart NetworkManager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+  when: >
+    dald_result_set_dns.changed == true or
+    dald_result_set_resolvconf.changed == true
 
 - name: Update DNS
   ansible.builtin.command: resolvconf -u
   when: >
-    dadl_result_set_dns.changed == true or
-    dadl_result_set_resolvconf.changed == true
+    dald_result_set_dns.changed == true or
+    dald_result_set_resolvconf.changed == true

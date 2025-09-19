@@ -1,9 +1,9 @@
-{% if dadl_primary_dc == true %}
+{% if dald_primary_dc == true %}
 nameserver 127.0.0.1
 {% else %}
-nameserver {{ dadl_primary_dc_ip }}
+nameserver {{ dald_primary_dc_ip }}
 {% endif %}
-{% for dns_server in dadl_dns_servers %}
+{% for dns_server in dald_dns_forward_servers %}
 nameserver {{ dns_server }}
 {% endfor %}
-search {{ dadl_domain_name }}
+search {{ dald_domain_name }}

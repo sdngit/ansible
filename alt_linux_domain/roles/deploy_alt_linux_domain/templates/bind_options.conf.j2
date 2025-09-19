@@ -21,7 +21,7 @@ options {
 	 */
 	forward first;
 	{% for allowed_ntp_client in dald_allowed_ntp_clients -%}
-	forwarders { {{ dadl_dns_servers | join('; ') }}; };
+	forwarders { {{ dald_dns_forward_servers | join('; ') }}; };
 	{% endfor %}
 
 	/*

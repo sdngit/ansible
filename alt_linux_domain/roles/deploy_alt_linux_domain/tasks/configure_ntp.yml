@@ -18,7 +18,7 @@
   ansible.builtin.package:
     name: chrony
     state: present
-  register: dadl_result_install_chrony
+  register: dald_result_install_chrony
 
 - name: Set chrony.conf
   ansible.builtin.template:
@@ -27,7 +27,7 @@
     owner: root
     group: root
     mode: 0640
-  register: dadl_result_set_chrony
+  register: dald_result_set_chrony
 
 - name: Enable and start chronyd.service
   ansible.builtin.service:
@@ -41,5 +41,5 @@
     daemon-reload: true
     state: restarted
   when: >
-    dadl_result_install_chrony.changed == true or
-    dadl_result_set_chrony.changed == true
+    dald_result_install_chrony.changed == true or
+    dald_result_set_chrony.changed == true

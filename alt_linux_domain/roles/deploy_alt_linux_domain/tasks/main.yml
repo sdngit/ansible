@@ -1,4 +1,18 @@
 ---
+# - name: Check the variable dald_admin_AD_pass
+#   ansible.builtin.assert:
+#     that:
+#       - cli_admin_AD_pass | length > 0
+#     fail_msg: The variable is empty!
+#     quiet: true
+
+# - name: Checking password matches
+#   ansible.builtin.assert:
+#     that:
+#       - cli_admin_AD_pass == cli_admin_AD_pass_retype
+#     fail_msg: Sorry, passwords do not match.
+#     quiet: true
+
 - name: Configure host
   import_tasks: configure_host.yml
   tags: dald_configure_host
