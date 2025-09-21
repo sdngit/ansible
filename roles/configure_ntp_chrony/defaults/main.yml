@@ -7,7 +7,6 @@ cntpc_ntp_servers:
   - ntp4.vniiftri.ru
   - ntp5.vniiftri.ru
 
-# Разрешённые сети для DNS-запросов. В том числе для рекурсивных запросов
-cntpc_allowed_dns_clients:
+cntpc_allowed_ntp_clients:
   - 192.168.0.0/16
   - 10.0.0.0/8

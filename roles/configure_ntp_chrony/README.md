@@ -18,10 +18,10 @@ Requirements
 Role Variables
 --------------
 
-| **Variable**              | **Default value**                                                                                                 | **Description**                                                          |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| cntpc_ntp_servers         | ntp.msk-ix.ru<br>ntp1.vniiftri.ru<br>ntp2.vniiftri.ru<br>ntp3.vniiftri.ru<br>ntp4.vniiftri.ru<br>ntp5.vniiftri.ru | Список серверов точного времени для синхронизации.                       |
-| cntpc_allowed_dns_clients | 192.168.0.0/16<br>10.0.0.0/8                                                                                      | Разрешённые сети для DNS-запросов. В том числе для рекурсивных запросов. |
+| **Variable**              | **Default value**                                                                                                 | **Description**                                      |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| cntpc_ntp_servers         | ntp.msk-ix.ru<br>ntp1.vniiftri.ru<br>ntp2.vniiftri.ru<br>ntp3.vniiftri.ru<br>ntp4.vniiftri.ru<br>ntp5.vniiftri.ru | Список серверов точного времени для синхронизации.   |
+| cntpc_allowed_ntp_clients | 192.168.0.0/16<br>10.0.0.0/8                                                                                      | Разрешённые сети клиентов для синхронизации времени. |
 
 
 Dependencies
@@ -54,15 +54,15 @@ cntpc_ntp_servers:
   - ntp4.vniiftri.ru
   - ntp5.vniiftri.ru
 
-cntpc_allowed_dns_clients:
+cntpc_allowed_ntp_clients:
   - 192.168.0.0/16
   - 10.0.0.0/8
 ```
 
 Run:
 ```bash
-$ ansible-playbook -i ./inventory.yml configure_ntp_chrony.yml --ask-pass -u root -l "dc1.test.alt"
-$ ansible-playbook -i ./inventory.yml configure_ntp_chrony.yml --ask-pass -u root -l "dc1.test.alt" -e "@some_file.yml"
+$ ansible-playbook -i ./inventory.yml 02_configure_ntp_chrony.yml --ask-pass -u root -l "dc1.test.alt"
+$ ansible-playbook -i ./inventory.yml 02_configure_ntp_chrony.yml --ask-pass -u root -l "dc1.test.alt" -e "@some_file.yml"
 ```
 
 

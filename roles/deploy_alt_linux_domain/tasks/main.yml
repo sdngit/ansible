@@ -1,25 +1,21 @@
 ---
-# - name: Check the variable dald_admin_AD_pass
-#   ansible.builtin.assert:
-#     that:
-#       - cli_admin_AD_pass | length > 0
-#     fail_msg: The variable is empty!
-#     quiet: true
+- name: Check the variable dald_admin_AD_pass
+  ansible.builtin.assert:
+    that:
+      - cli_admin_AD_pass | length > 0
+    fail_msg: The variable is empty!
+    quiet: true
 
-# - name: Checking password matches
-#   ansible.builtin.assert:
-#     that:
-#       - cli_admin_AD_pass == cli_admin_AD_pass_retype
-#     fail_msg: Sorry, passwords do not match.
-#     quiet: true
+- name: Checking password matches
+  ansible.builtin.assert:
+    that:
+      - cli_admin_AD_pass == cli_admin_AD_pass_retype
+    fail_msg: Sorry, passwords do not match.
+    quiet: true
 
 - name: Configure host
   import_tasks: configure_host.yml
   tags: dald_configure_host
-
-- name: Configure NTP
-  import_tasks: configure_ntp.yml
-  tags: dald_configure_ntp
 
 - name: Install packages
   import_tasks: install_packages.yml
@@ -36,7 +32,3 @@
 - name: Create domain
   import_tasks: create_domain.yml
   tags: dald_create_domain
-
-# - name: Test
-#   import_tasks: test.yml
-#   tags: dald_test

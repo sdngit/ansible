@@ -19,4 +19,5 @@
     private: true
 
   roles:
+    - configure_ntp_chrony
     - deploy_alt_linux_domain
