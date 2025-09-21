@@ -1,4 +1,4 @@
-{% for ntp_server in dald_ntp_servers %}
+{% for ntp_server in cntpc_ntp_servers %}
 {% if loop.index == 1 %}
 server {{ ntp_server }} iburst prefer
 {% else %}
@@ -24,7 +24,7 @@ rtcsync
 #minsources 2
 
 # Allow NTP client access from local network.
-{% for allowed_ntp_client in dald_allowed_ntp_clients %}
+{% for allowed_ntp_client in cntpc_allowed_ntp_clients %}
 allow {{ allowed_ntp_client }}
 {% endfor %}
 

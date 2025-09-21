@@ -29,11 +29,11 @@
   when: dald_result_file_smb.stat.exists
 
 - name: Create primary DC
-  import_tasks: create_primary_dc.yml
+  include_tasks: create_primary_dc.yml
   when: dald_primary_dc | bool == true
 
 - name: Join secondary DC to domain
-  import_tasks: join_secondary_dc_to_domain.yml
+  include_tasks: join_secondary_dc_to_domain.yml
   when: dald_primary_dc | bool == false
 
 - name: Start services samba and bind

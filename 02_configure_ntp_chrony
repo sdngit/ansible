@@ -1,0 +1,7 @@
+---
+- name: Configure NTP
+  hosts: all
+  gather_facts: false
+  become: yes
+  roles:
+    - configure_ntp_chrony

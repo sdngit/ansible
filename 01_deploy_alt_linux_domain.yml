@@ -1,5 +1,6 @@
 ---
 - hosts: all
+  gather_facts: true
   become: true
   vars_prompt:
   - name: cli_admin_AD_username

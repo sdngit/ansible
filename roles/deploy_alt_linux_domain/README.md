@@ -7,14 +7,17 @@ Role Description
 При запуске плэйбука будут запрошены логин администратора (по умолчанию "administrator") и пароль.\
 При создании нового домена автоматически создается учетная запись с именем "administrator". Изменить это поведение нельзя.
 
+
 > [!CAUTION]
 > Тестировалось только на Alt Linux 11.
 
+
 > [!NOTE]
-> https://docs.altlinux.org/ru-RU/alt-domain/11.0/html/alt-domain/
+> https://docs.altlinux.org/ru-RU/alt-domain/11.0/html/alt-domain/ \
 > https://www.altlinux.org/ActiveDirectory/DC
 
-1. Назначет имя в соответствии с `inventory`.
+
+1. Назначет хосту имя в соответствии с тем, как он указан в `inventory`.
 2. Настраивает DNS.
 3. Создает новый домен или добавляет к существующему.
 
@@ -82,12 +85,12 @@ dald_primary_dc: true
 dald_domain_function_level: 2016
 dald_net_ifaces: eth0
 dald_dns_forward_servers:
-    - 192.168.0.1
-    - 8.8.8.8
+  - 192.168.0.1
+  - 8.8.8.8
 dald_allowed_dns_clients:
-    - 192.168.0.0/24
-    - 192.168.1.0/24
-    - 192.168.3.0/24
+  - 192.168.0.0/24
+  - 192.168.1.0/24
+  - 192.168.3.0/24
 ```
 
 Run:

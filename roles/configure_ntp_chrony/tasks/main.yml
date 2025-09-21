@@ -1,42 +1,45 @@
 ---
-# - name: Check the variable dald_admin_AD_pass
-#   ansible.builtin.assert:
-#     that:
-#       - cli_admin_AD_pass | length > 0
-#     fail_msg: The variable is empty!
-#     quiet: true
+- name: Remove NTPD
+  ansible.builtin.package:
+    name: ntp
+    state: absent
 
-# - name: Checking password matches
-#   ansible.builtin.assert:
-#     that:
-#       - cli_admin_AD_pass == cli_admin_AD_pass_retype
-#     fail_msg: Sorry, passwords do not match.
-#     quiet: true
+- name: Stop Systemd-timesyncd
+  ansible.builtin.service:
+    name: systemd-timesyncd
+    enabled: false
+    state: stopped
+  register: cntpc_result_stop_systemd_timesyncd
+  failed_when:
+    - cntpc_result_stop_systemd_timesyncd.failed == true
+    - '"Could not find the requested service systemd-timesyncd" not in cntpc_result_stop_systemd_timesyncd.msg'
 
-- name: Configure host
-  import_tasks: configure_host.yml
-  tags: dald_configure_host
+- name: Install Chrony
+  ansible.builtin.package:
+    name: chrony
+    state: present
+  register: cntpc_result_install_chrony
 
-- name: Configure NTP
-  import_tasks: configure_ntp.yml
-  tags: dald_configure_ntp
+- name: Set chrony.conf
+  ansible.builtin.template:
+    src: chrony.conf.j2
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: 0640
+  register: cntpc_result_set_chrony
 
-- name: Install packages
-  import_tasks: install_packages.yml
-  tags: dald_install_packages
+- name: Enable and start chronyd.service
+  ansible.builtin.service:
+    name: chronyd
+    enabled: true
+    state: started
 
-- name: Stop services
-  import_tasks: stop_services.yml
-  tags: dald_stop_services
-
-- name: Configure Bind
-  import_tasks: configure_bind.yml
-  tags: dald_configure_bind
-
-- name: Create domain
-  import_tasks: create_domain.yml
-  tags: dald_create_domain
-
-# - name: Test
-#   import_tasks: test.yml
-#   tags: dald_test
+- name: Restart chronyd
+  ansible.builtin.service:
+    name: chronyd
+    daemon-reload: true
+    state: restarted
+  when: >
+    cntpc_result_install_chrony.changed == true or
+    cntpc_result_set_chrony.changed == true
