@@ -1,9 +1,0 @@
-{% if dald_create_domain == true %}
-nameserver 127.0.0.1
-{% else %}
-nameserver {{ dald_ip_primary_dc }}
-{% endif %}
-{% for dns_server in dald_dns_forward_servers %}
-nameserver {{ dns_server }}
-{% endfor %}
-search {{ dald_domain_name }}

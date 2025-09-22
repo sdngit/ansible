@@ -12,7 +12,7 @@ includedir /etc/krb5.conf.d/
  renew_lifetime = 7d
  forwardable = true
  rdns = false
- default_realm = {{ dald_domain_name | upper }}
+ default_realm = {{ daldc_domain_name | upper }}
  default_ccache_name = KEYRING:persistent:%{uid}
 
 [realms]

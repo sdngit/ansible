@@ -1,0 +1,22 @@
+---
+- name: Create domain {{ daldc_domain_name | upper }}
+  ansible.builtin.command: >
+    samba-tool domain provision
+      --realm={{ daldc_domain_name }}
+      --domain={{ daldc_domain_name.split('.')[0] }}
+      --adminpass={{ daldc_admin_AD_pass }}
+      --dns-backend=BIND9_DLZ
+      --option="ad dc functional level = {{ daldc_domain_function_level }}"
+      --server-role=dc
+      --function-level={{ daldc_domain_function_level }}
+      --base-schema={{ daldc_base_schema }}
+      --use-rfc2307
+  no_log: true
+
+- name: Copy /var/lib/samba/private/krb5.conf to /etc/krb5.conf
+  ansible.builtin.copy:
+    src: /var/lib/samba/private/krb5.conf
+    dest: /etc/krb5.conf
+    remote_src: true
+    force: true
+    backup: true

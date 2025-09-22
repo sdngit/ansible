@@ -20,4 +20,4 @@
 
   roles:
     - configure_ntp_chrony
-    - deploy_alt_linux_domain
+    - deploy_alt_linux_domain_controller

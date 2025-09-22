@@ -10,10 +10,10 @@
 - name: Populate service facts
   ansible.builtin.service_facts:
 
-- name: Stop {{ dald_stop_services }}
+- name: Stop {{ daldc_stop_services }}
   ansible.builtin.service:
     name: "{{ item }}"
     enabled: false
     state: stopped
-  loop: "{{ dald_stop_services }}"
+  loop: "{{ daldc_stop_services }}"
   when: ansible_facts.services[item] is defined

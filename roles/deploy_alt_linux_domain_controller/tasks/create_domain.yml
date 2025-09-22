@@ -1,18 +1,18 @@
 ---
 - name: Check if the DC already exists
   ansible.builtin.command: samba-tool domain info 127.0.0.1
-  register: dald_result_check_dc
+  register: daldc_result_check_dc
   ignore_errors: true
 
 - name: DC already exists
   ansible.builtin.fail:
     msg: DC already exists
-  when: dald_result_check_dc.rc == 0
+  when: daldc_result_check_dc.rc == 0
 
 - name: Check file existence /etc/samba/smb.conf
   ansible.builtin.stat:
     path: /etc/samba/smb.conf
-  register: dald_result_file_smb
+  register: daldc_result_file_smb
 
 - name: Backup /etc/samba/smb.conf to /etc/samba/smb.conf.bkp
   ansible.builtin.copy:
@@ -20,21 +20,21 @@
     dest: /etc/samba/smb.conf.bkp
     remote_src: true
     force: true
-  when: dald_result_file_smb.stat.exists
+  when: daldc_result_file_smb.stat.exists
 
 - name: Remove file /etc/samba/smb.conf
   ansible.builtin.file:
     path: /etc/samba/smb.conf
     state: absent
-  when: dald_result_file_smb.stat.exists
+  when: daldc_result_file_smb.stat.exists
 
 - name: Create primary DC
   include_tasks: create_primary_dc.yml
-  when: dald_create_domain | bool == true
+  when: daldc_create_domain | bool == true
 
 - name: Join secondary DC to domain
   include_tasks: join_secondary_dc_to_domain.yml
-  when: dald_create_domain | bool == false
+  when: daldc_create_domain | bool == false
 
 - name: Start services samba and bind
   ansible.builtin.service:

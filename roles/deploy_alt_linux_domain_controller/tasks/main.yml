@@ -1,5 +1,5 @@
 ---
-- name: Check the variable dald_admin_AD_pass
+- name: Check the variable daldc_admin_AD_pass
   ansible.builtin.assert:
     that:
       - cli_admin_AD_pass | length > 0
@@ -15,20 +15,20 @@
 
 - name: Configure host
   import_tasks: configure_host.yml
-  tags: dald_configure_host
+  tags: daldc_configure_host
 
 - name: Install packages
   import_tasks: install_packages.yml
-  tags: dald_install_packages
+  tags: daldc_install_packages
 
 - name: Stop services
   import_tasks: stop_services.yml
-  tags: dald_stop_services
+  tags: daldc_stop_services
 
 - name: Configure Bind
   import_tasks: configure_bind.yml
-  tags: dald_configure_bind
+  tags: daldc_configure_bind
 
 - name: Create domain
   import_tasks: create_domain.yml
-  tags: dald_create_domain
+  tags: daldc_create_domain

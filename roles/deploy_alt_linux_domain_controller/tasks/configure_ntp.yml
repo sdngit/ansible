@@ -9,16 +9,16 @@
     name: systemd-timesyncd
     enabled: false
     state: stopped
-  register: dald_result_stop_systemd_timesyncd
+  register: daldc_result_stop_systemd_timesyncd
   failed_when:
-    - dald_result_stop_systemd_timesyncd.failed == true
-    - '"Could not find the requested service systemd-timesyncd" not in dald_result_stop_systemd_timesyncd.msg'
+    - daldc_result_stop_systemd_timesyncd.failed == true
+    - '"Could not find the requested service systemd-timesyncd" not in daldc_result_stop_systemd_timesyncd.msg'
 
 - name: Install Chrony
   ansible.builtin.package:
     name: chrony
     state: present
-  register: dald_result_install_chrony
+  register: daldc_result_install_chrony
 
 - name: Set chrony.conf
   ansible.builtin.template:
@@ -27,7 +27,7 @@
     owner: root
     group: root
     mode: 0640
-  register: dald_result_set_chrony
+  register: daldc_result_set_chrony
 
 - name: Enable and start chronyd.service
   ansible.builtin.service:
@@ -41,5 +41,5 @@
     daemon-reload: true
     state: restarted
   when: >
-    dald_result_install_chrony.changed == true or
-    dald_result_set_chrony.changed == true
+    daldc_result_install_chrony.changed == true or
+    daldc_result_set_chrony.changed == true
