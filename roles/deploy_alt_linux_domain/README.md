@@ -34,10 +34,10 @@ Role Variables
 
 | **Variable**               | **Default value**                                                                                                 | **Description**                                                                                                                                                                                                                                                   |
 | :------------------------- | :---------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| dald_primary_dc            | false                                                                                                             | Указывает является ли разворачиваемый контроллер домена первым (Primary) или дополнительным (Secondary).<br><br>true - primary.<br>Будет создан новый домен.<br><br>false - secondary.<br>Хост будет добавлен в существующий домен как дополнительный контроллер. |
+| dald_create_domain         | false                                                                                                             | Указывает является ли разворачиваемый контроллер домена первым (Primary) или дополнительным (Secondary).<br><br>true - primary.<br>Будет создан новый домен.<br><br>false - secondary.<br>Хост будет добавлен в существующий домен как дополнительный контроллер. |
 | dald_domain_function_level | 2016                                                                                                              | Уровень функциональности домена и леса: 2000, 2003, 2008, 2008_R2, или 2016.                                                                                                                                                                                      |
 | dald_base_schema           | 2019                                                                                                              | Версия базовой схемы домена.                                                                                                                                                                                                                                      |
-| dald_primary_dc_ip         |192.168.0.51                                                                                                       | IP адрес уже развернутого контроллера домена. Требуется при добавлении нового контроллера.                                                                                                                                                                        |
+| dald_ip_primary_dc         |192.168.0.51                                                                                                       | IP адрес уже развернутого контроллера домена. Требуется при добавлении нового контроллера.                                                                                                                                                                        |
 | dald_net_ifaces            | eth0                                                                                                              | Сетевой интерфейс. Требуется для настройки DNS.                                                                                                                                                                                                                   |
 | dald_dns_forward_servers   | 1.1.1.1<br>8.8.8.8                                                                                                | Адреса DNS серверов для пересылки.                                                                                                                                                                                                                                |
 | dald_allowed_dns_clients   | 192.168.0.0/24                                                                                                    | Список адресов, откуда разрешены DNS запросы.                                                                                                                                                                                                                     |
@@ -79,7 +79,7 @@ File variables:
 
 some_file.yml
 ```YAML
-dald_primary_dc: true
+dald_create_domain: true
 dald_domain_function_level: 2016
 dald_net_ifaces: eth0
 dald_dns_forward_servers:
@@ -94,7 +94,7 @@ dald_allowed_dns_clients:
 Run:
 ```bash
 # Для создания нового домена
-$ ansible-playbook -i ./inventory.yml 01_deploy_alt_linux_domain.yml --ask-pass -u root -l "dc1.test.alt" -e "dald_primary_dc=true"
+$ ansible-playbook -i ./inventory.yml 01_deploy_alt_linux_domain.yml --ask-pass -u root -l "dc1.test.alt" -e "dald_create_domain=true"
 
 # Для ввода дополнительного контроллера домена в существующий домен
 $ ansible-playbook -i ./inventory.yml 01_deploy_alt_linux_domain.yml --ask-pass -u root -l "dc2.test.alt"

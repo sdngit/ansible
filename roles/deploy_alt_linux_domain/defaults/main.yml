@@ -1,9 +1,9 @@
 ---
 # Разворачивается Primary или Secondary DC
-dald_primary_dc: false
+dald_create_domain: false
 
 # Адрес существующего домена
-dald_primary_dc_ip: 192.168.0.51
+dald_ip_primary_dc: 192.168.0.51
 
 # Уровень домена и леса
 dald_domain_function_level: 2016

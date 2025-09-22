@@ -30,11 +30,11 @@
 
 - name: Create primary DC
   include_tasks: create_primary_dc.yml
-  when: dald_primary_dc | bool == true
+  when: dald_create_domain | bool == true
 
 - name: Join secondary DC to domain
   include_tasks: join_secondary_dc_to_domain.yml
-  when: dald_primary_dc | bool == false
+  when: dald_create_domain | bool == false
 
 - name: Start services samba and bind
   ansible.builtin.service:

@@ -1,16 +1,16 @@
 ---
 - name: Check DNS record {{ ansible_host }}
   ansible.builtin.command: host -t A {{ inventory_hostname }}
-  delegate_to: "{{ dald_primary_dc_ip }}"
+  delegate_to: "{{ dald_ip_primary_dc }}"
   ignore_errors: true
   register: dald_result_check_dns
 
 - name: Add DNS record {{ ansible_host }} to {{ dald_domain_name | upper }}
   ansible.builtin.command: >
-    samba-tool dns add {{ dald_primary_dc_ip }} {{ dald_domain_name }}
+    samba-tool dns add {{ dald_ip_primary_dc }} {{ dald_domain_name }}
     {{ inventory_hostname }} A {{ ansible_host }}
     --username={{ dald_admin_AD_username }} --password={{ dald_admin_AD_pass }}
-  delegate_to: "{{ dald_primary_dc_ip }}"
+  delegate_to: "{{ dald_ip_primary_dc }}"
   no_log: true
   when: dald_result_check_dns.rc != 0
 
@@ -64,7 +64,7 @@
 - name: Set /etc/net/ifaces/{{ dald_net_ifaces }}/resolv.conf
   ansible.builtin.lineinfile:
     path: "/etc/net/ifaces/{{ dald_net_ifaces }}/resolv.conf"
-    regexp: '^nameserver {{ dald_primary_dc_ip }}'
+    regexp: '^nameserver {{ dald_ip_primary_dc }}'
     line: nameserver {{ ansible_host }}
   register: dald_result_set_resolv
 

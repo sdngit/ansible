@@ -25,7 +25,7 @@
     regexp: '^name_servers='
     line: name_servers=127.0.0.1
   register: dald_result_set_resolvconf
-  when: dald_primary_dc | bool == true
+  when: dald_create_domain | bool == true
 
 - name: Restart NetworkManager
   ansible.builtin.service:
