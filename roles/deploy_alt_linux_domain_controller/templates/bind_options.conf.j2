@@ -20,9 +20,7 @@ options {
 	 * query the forwarders.
 	 */
 	forward first;
-	{% for allowed_ntp_client in daldc_allowed_ntp_clients -%}
 	forwarders { {{ daldc_dns_forward_servers | join('; ') }}; };
-	{% endfor %}
 
 	/*
 	 * Specifies which hosts are allowed to ask ordinary questions.
