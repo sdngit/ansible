@@ -14,10 +14,10 @@
     path: /etc/samba/smb.conf
   register: daldc_result_file_smb
 
-- name: Backup /etc/samba/smb.conf to /etc/samba/smb.conf.bkp
+- name: Backup /etc/samba/smb.conf to /etc/samba/smb.conf.bak
   ansible.builtin.copy:
     src: /etc/samba/smb.conf
-    dest: /etc/samba/smb.conf.bkp
+    dest: /etc/samba/smb.conf.bak
     remote_src: true
     force: true
   when: daldc_result_file_smb.stat.exists

@@ -7,6 +7,7 @@ daldc_install_packages:
   - bind-utils
   - rsync
   - osync
+  - ldb-tools
 
 daldc_stop_services:
   - smb.service

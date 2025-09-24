@@ -29,10 +29,6 @@
   import_tasks: configure_bind.yml
   tags: daldc_configure_bind
 
-- name: Create domain
-  import_tasks: create_domain.yml
-  tags: daldc_create_domain
-
-- name: Configure replication SysVol
-  import_tasks: configure_rep_sysvol.yml
-  tags: daldc_configure_rep_sysvol
+- name: Create domain controller
+  import_tasks: create_domain_controller.yml
+  tags: daldc_create_DC

@@ -77,3 +77,6 @@
 - name: Update DNS
   ansible.builtin.command: resolvconf -u
   when: daldc_result_set_resolv.changed == true
+
+- name: Configure replication SysVol
+  import_tasks: configure_rep_sysvol.yml

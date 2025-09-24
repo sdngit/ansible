@@ -4,6 +4,25 @@
 
 - name: Execute on {{ daldc_ip_primary_dc }}
   block:
+    - name: Check file existence idmap.ldb.
+      ansible.builtin.stat:
+        path: /var/lib/samba/private/idmap.ldb.bak
+      register: daldc_result_file_idmap
+
+    - name: Backup /var/lib/samba/private/idmap.ldb to /var/lib/samba/private/idmap.ldb.bak
+      ansible.builtin.command: tdbbackup -s .bak /var/lib/samba/private/idmap.ldb
+      when: not daldc_result_file_idmap.stat.exists
+
+    - name: Creates a cron file under /etc/cron.d/idmap
+      ansible.builtin.cron:
+        name: Backup /var/lib/samba/private/idmap.ldb
+        hour: "3"
+        user: root
+        job: >
+          "rm -f /var/lib/samba/private/idmap.ldb.bak
+          && tdbbackup -s .bak /var/lib/samba/private/idmap.ldb >/dev/null 2>&1"
+        cron_file: idmap
+
     - name: Create config sync SysVol
       ansible.builtin.template:
         src: templates/sync.conf.j2
@@ -12,7 +31,7 @@
         group: root
         mode: 0644
 
-    - name: Creates a cron file under /etc/cron.d
+    - name: Creates a cron file under /etc/cron.d/sysvol
       ansible.builtin.lineinfile:
         path: /etc/cron.d/sysvol
         search_string: "/usr/bin/osync.sh /etc/osync/sync_{{ inventory_hostname }}.conf"
@@ -23,3 +42,16 @@
         mode: '0644'
 
   delegate_to: "{{ daldc_ip_primary_dc }}"
+
+- name: Sync /var/lib/samba/private/idmap.ldb
+  ansible.builtin.cron:
+    name: Sync /var/lib/samba/private/idmap.ldb
+    minute: "15"
+    hour: "4"
+    user: root
+    job: >
+      "rsync -a {{ daldc_ip_primary_dc }}:/var/lib/samba/private/idmap.ldb.bak /var/lib/samba/private/idmap.ldb
+      && net cache flush
+      && if ! samba-tool ntacl sysvolcheck; then samba-tool ntacl sysvolreset; fi
+      && systemctl restart samba.service >/dev/null 2>&1"
+    cron_file: idmap
