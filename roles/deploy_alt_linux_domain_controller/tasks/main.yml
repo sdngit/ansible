@@ -1,17 +1,17 @@
 ---
-- name: Check the variable daldc_admin_AD_pass
-  ansible.builtin.assert:
-    that:
-      - cli_admin_AD_pass | length > 0
-    fail_msg: The variable is empty!
-    quiet: true
+# - name: Check the variable daldc_admin_AD_pass
+#   ansible.builtin.assert:
+#     that:
+#       - cli_admin_AD_pass | length > 0
+#     fail_msg: The variable is empty!
+#     quiet: true
 
-- name: Checking password matches
-  ansible.builtin.assert:
-    that:
-      - cli_admin_AD_pass == cli_admin_AD_pass_retype
-    fail_msg: Sorry, passwords do not match.
-    quiet: true
+# - name: Checking password matches
+#   ansible.builtin.assert:
+#     that:
+#       - cli_admin_AD_pass == cli_admin_AD_pass_retype
+#     fail_msg: Sorry, passwords do not match.
+#     quiet: true
 
 - name: Configure host
   import_tasks: configure_host.yml
@@ -32,3 +32,7 @@
 - name: Create domain
   import_tasks: create_domain.yml
   tags: daldc_create_domain
+
+- name: Configure replication SysVol
+  import_tasks: configure_rep_sysvol.yml
+  tags: daldc_configure_rep_sysvol

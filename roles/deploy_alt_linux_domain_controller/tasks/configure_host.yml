@@ -40,3 +40,9 @@
   when: >
     daldc_result_set_dns.changed == true or
     daldc_result_set_resolvconf.changed == true
+
+- name: Generate SSH keypair for root
+  community.crypto.openssh_keypair:
+    path: /root/.ssh/id_ed25519
+    type: ed25519
+    owner: root

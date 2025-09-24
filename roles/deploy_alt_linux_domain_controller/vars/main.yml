@@ -5,6 +5,8 @@ daldc_install_packages:
   - task-samba-dc-mitkrb5
   - bind
   - bind-utils
+  - rsync
+  - osync
 
 daldc_stop_services:
   - smb.service
@@ -14,7 +16,11 @@ daldc_stop_services:
   - bind.service
 
 daldc_admin_AD_username: "{{ cli_admin_AD_username }}"
-daldc_admin_AD_pass: "{{ cli_admin_AD_pass }}"
+#daldc_admin_AD_pass: "{{ cli_admin_AD_pass }}"
+daldc_admin_AD_pass: 'Qwerty12@'
 
 # Получить IP адреса хостов группы из inventory файла
-daldc_list_dc: "{{ groups['alt_dc'] | map('extract', hostvars, ['ansible_host']) | select('defined') | list }}"
+daldc_list_ip_dc: "{{ groups['alt_dc'] | map('extract', hostvars, ['ansible_host']) | select('defined') | join(' ') }}"
+
+# Получить имена хостов группы из inventory файла
+daldc_list_hostname_dc: "{{ groups['alt_dc'] | join(' ') }}"

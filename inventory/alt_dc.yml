@@ -2,10 +2,17 @@
 all:
   children:
     alt_dc:
-      hosts:
-        dc3.test.alt:
-          ansible_host: 192.168.0.53
-        dc1.test.alt:
-          ansible_host: 192.168.0.51
-        dc2.test.alt:
-          ansible_host: 192.168.0.52
+      children:
+        test:
+          hosts:
+            dc3.test.alt:
+              ansible_host: 192.168.0.53
+            dc1.test.alt:
+              ansible_host: 192.168.0.51
+            dc2.test.alt:
+              ansible_host: 192.168.0.52
+
+        prod:
+          hosts:
+            dc1.prod.alt:
+              ansible_host: 192.168.0.60

@@ -1,0 +1,25 @@
+---
+- name: Setting up an SSH connection between domain controllers
+  import_tasks: setting_ssh_connection.yml
+
+- name: Execute on {{ daldc_ip_primary_dc }}
+  block:
+    - name: Create config sync SysVol
+      ansible.builtin.template:
+        src: templates/sync.conf.j2
+        dest: "/etc/osync/sync_{{ inventory_hostname }}.conf"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Creates a cron file under /etc/cron.d
+      ansible.builtin.lineinfile:
+        path: /etc/cron.d/sysvol
+        search_string: "/usr/bin/osync.sh /etc/osync/sync_{{ inventory_hostname }}.conf"
+        line: "*/5 * * * * root /usr/bin/osync.sh /etc/osync/sync_{{ inventory_hostname }}.conf --silent"
+        create: true
+        owner: root
+        group: root
+        mode: '0644'
+
+  delegate_to: "{{ daldc_ip_primary_dc }}"

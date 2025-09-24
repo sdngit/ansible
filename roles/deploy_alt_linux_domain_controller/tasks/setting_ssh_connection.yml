@@ -1,0 +1,64 @@
+---
+- name: Get a public SSH key {{ daldc_ip_primary_dc }}
+  ansible.builtin.command: cat /root/.ssh/id_ed25519.pub
+  register: daldc_result_pub_key
+  delegate_to: "{{ daldc_ip_primary_dc }}"
+
+- name: Add SSH public key on localhost
+  ansible.builtin.lineinfile:
+    path: /root/.ssh/authorized_keys
+    search_string: "{{ daldc_result_pub_key.stdout }}"
+    line: "{{ daldc_result_pub_key.stdout }} root@{{ daldc_ip_primary_dc }}"
+    create: true
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Get public SSH key localhost
+  ansible.builtin.command: cat /root/.ssh/id_ed25519.pub
+  register: daldc_result_my_pub_key
+
+- name: Add SSH public key on {{ daldc_ip_primary_dc }}
+  ansible.builtin.lineinfile:
+    path: /root/.ssh/authorized_keys
+    search_string: "{{ daldc_result_my_pub_key.stdout }}"
+    line: "{{ daldc_result_my_pub_key.stdout }} root@{{ inventory_hostname }}"
+    create: true
+    owner: root
+    group: root
+    mode: '0600'
+  delegate_to: "{{ daldc_ip_primary_dc }}"
+
+- name: Scan SSH fingerprint hosts
+  ansible.builtin.command: ssh-keyscan -t ed25519 {{ daldc_list_ip_dc }} {{ daldc_list_hostname_dc }}
+  register: daldc_result_fingerprints
+  changed_when: false
+
+- name: Add SSH fingerprint on localhost
+  ansible.builtin.lineinfile:
+    path: /root/.ssh/known_hosts
+    search_string: "{{ item }}"
+    line: "{{ item }}"
+    create: true
+    owner: root
+    group: root
+    mode: '0600'
+  loop: "{{ daldc_result_fingerprints.stdout_lines }}"
+
+- name: Get SSH fingerprint localhost
+  ansible.builtin.command: ssh-keyscan -t ed25519 {{ ansible_host }} {{ inventory_hostname }}
+  register: daldc_result_fingerprints
+  changed_when: false
+  delegate_to: "{{ daldc_ip_primary_dc }}"
+
+- name: Add SSH fingerprint on "{{ daldc_ip_primary_dc }}"
+  ansible.builtin.lineinfile:
+    path: /root/.ssh/known_hosts
+    search_string: "{{ item }}"
+    line: "{{ item }}"
+    create: true
+    owner: root
+    group: root
+    mode: '0600'
+  loop: "{{ daldc_result_fingerprints.stdout_lines }}"
+  delegate_to: "{{ daldc_ip_primary_dc }}"
