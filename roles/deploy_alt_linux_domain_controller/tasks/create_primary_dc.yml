@@ -12,11 +12,3 @@
       --base-schema={{ daldc_base_schema }}
       --use-rfc2307
   no_log: true
-
-- name: Copy /var/lib/samba/private/krb5.conf to /etc/krb5.conf
-  ansible.builtin.copy:
-    src: /var/lib/samba/private/krb5.conf
-    dest: /etc/krb5.conf
-    remote_src: true
-    force: true
-    backup: true

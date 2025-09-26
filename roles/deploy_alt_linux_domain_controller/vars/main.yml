@@ -8,6 +8,9 @@ daldc_install_packages:
   - rsync
   - osync
   - ldb-tools
+  - sssd
+  - sssd-ad
+  - task-auth-ad-sssd
 
 daldc_stop_services:
   - smb.service
@@ -21,7 +24,7 @@ daldc_admin_AD_username: "{{ cli_admin_AD_username }}"
 daldc_admin_AD_pass: 'Qwerty12@'
 
 # Получить IP адреса хостов группы из inventory файла
-daldc_list_ip_dc: "{{ groups['alt_dc'] | map('extract', hostvars, ['ansible_host']) | select('defined') | join(' ') }}"
+daldc_list_ip_dc: "{{ groups[daldc_group_servers] | map('extract', hostvars, ['ansible_host']) | select('defined') | join(' ') }}"
 
 # Получить имена хостов группы из inventory файла
-daldc_list_hostname_dc: "{{ groups['alt_dc'] | join(' ') }}"
+daldc_list_hostname_dc: "{{ groups[daldc_group_servers] | join(' ') }}"

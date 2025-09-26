@@ -10,9 +10,9 @@ all:
 
         alt_dc_test:
           hosts:
-            dc3.altdomain.test:
+            dc3.test.alt:
               ansible_host: 192.168.0.53
-            dc1.altdomain.test:
+            dc1.test.alt:
               ansible_host: 192.168.0.51
-            dc2.altdomain.test:
+            dc2.test.alt:
               ansible_host: 192.168.0.52

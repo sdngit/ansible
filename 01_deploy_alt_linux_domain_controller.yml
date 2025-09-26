@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: alt_dc
   gather_facts: true
   become: true
   vars_prompt:

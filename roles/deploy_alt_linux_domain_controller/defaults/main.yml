@@ -1,4 +1,7 @@
 ---
+# Группа в inventory
+daldc_group_servers: 'alt_dc_test'
+
 # Разворачивается Primary или Secondary DC
 daldc_create_domain: false
 

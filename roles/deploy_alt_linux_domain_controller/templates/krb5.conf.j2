@@ -13,13 +13,19 @@ includedir /etc/krb5.conf.d/
  forwardable = true
  rdns = false
  default_realm = {{ daldc_domain_name | upper }}
- default_ccache_name = KEYRING:persistent:%{uid}
+# default_ccache_name = KEYRING:persistent:%{uid}
 
 [realms]
 # EXAMPLE.COM = {
 #  default_domain = example.com
 # }
+{{ daldc_domain_name | upper }} = {
+ default_domain = {{ daldc_domain_name | lower }}
+}
 
 [domain_realm]
 # .example.com = EXAMPLE.COM
 # example.com = EXAMPLE.COM
+ {{ inventory_hostname.split('.')[0] }} = {{ daldc_domain_name | upper }}
+ .{{ daldc_domain_name | lower }} = {{ daldc_domain_name | upper }}
+ {{ daldc_domain_name | lower }} = {{ daldc_domain_name | upper }}

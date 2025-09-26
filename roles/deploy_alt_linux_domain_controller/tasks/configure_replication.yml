@@ -41,17 +41,28 @@
         group: root
         mode: '0644'
 
+    - name: Sync SysVol
+      ansible.builtin.command: /usr/bin/osync.sh /etc/osync/sync_{{ inventory_hostname }}.conf
+      ignore_errors: true
+
   delegate_to: "{{ daldc_ip_primary_dc }}"
 
-- name: Sync /var/lib/samba/private/idmap.ldb
+- name: Create /etc/cron.d/idmap
   ansible.builtin.cron:
     name: Sync /var/lib/samba/private/idmap.ldb
     minute: "15"
     hour: "4"
     user: root
     job: >
-      "rsync -a {{ daldc_ip_primary_dc }}:/var/lib/samba/private/idmap.ldb.bak /var/lib/samba/private/idmap.ldb
+      rsync -a {{ daldc_ip_primary_dc }}:/var/lib/samba/private/idmap.ldb.bak /var/lib/samba/private/idmap.ldb
       && net cache flush
       && if ! samba-tool ntacl sysvolcheck; then samba-tool ntacl sysvolreset; fi
-      && systemctl restart samba.service >/dev/null 2>&1"
+      && systemctl restart samba.service >/dev/null 2>&1
     cron_file: idmap
+
+- name: Sync idmap.ldb
+  ansible.builtin.shell: >
+    rsync -a {{ daldc_ip_primary_dc }}:/var/lib/samba/private/idmap.ldb.bak /var/lib/samba/private/idmap.ldb
+    && net cache flush
+    && if ! samba-tool ntacl sysvolcheck; then samba-tool ntacl sysvolreset; fi
+    && systemctl restart samba.service

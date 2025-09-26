@@ -1,0 +1,31 @@
+[global]
+        ad dc functional level = {{ daldc_domain_function_level }}
+        netbios name = {{ inventory_hostname.split('.')[0] | upper }}
+        realm = {{ daldc_domain_name | upper }}
+        server role = active directory domain controller
+        server services = s3fs, rpc, nbt, wrepl, ldap, cldap, kdc, drepl, winbindd, ntp_signd, kcc, dnsupdate
+        workgroup = {{ inventory_hostname.split('.')[1] | upper }}
+        idmap_ldb:use rfc2307  = yes
+
+#        kerberos method = dedicated keytab
+#        dedicated keytab file = /etc/krb5.keytab
+        idmap config * : range = 200000-2000200000
+        idmap config * : backend = sss
+        server services = -dns
+        log file = /var/log/samba/message.log
+        max log size = 200000
+        log level = 1 auth_json_audit:3 dsdb_json_audit:5 dsdb_password_json_audit:5 dsdb_group_json_audit:5 dsdb_transaction_json_audit:5
+#        ldap server require strong auth = yes
+        ldap server require strong auth = no
+#        tls enabled  = yes
+#        tls keyfile  = tls/alt-s-dc01.alt-rtdc.local.key
+#        tls certfile = tls/alt-s-dc01.alt-rtdc.local.crt
+#        tls cafile   = tls/rootaltCA.crt
+
+[sysvol]
+        path = /var/lib/samba/sysvol
+        read only = No
+
+[netlogon]
+        path = /var/lib/samba/sysvol/{{ daldc_domain_name | lower }}/scripts
+        read only = No
