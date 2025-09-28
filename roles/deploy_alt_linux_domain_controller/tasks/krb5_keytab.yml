@@ -1,0 +1,54 @@
+---
+- name: Check file existence /etc/krb5.keytab
+  ansible.builtin.stat:
+    path: /etc/krb5.keytab
+  register: daldc_result_file_keytab
+
+- name: kinit
+  args:
+    executable: /usr/bin/expect
+  ansible.builtin.shell: |
+    spawn kinit {{ daldc_admin_AD_username }}@{{ daldc_domain_name | upper }}
+    expect -exact "Password for {{ daldc_admin_AD_username }}@{{ daldc_domain_name | upper }}:"
+    send -- "{{ daldc_admin_AD_pass }}\n"
+    expect eof
+  no_log: true
+
+- name: klist
+  ansible.builtin.command: klist
+
+- block:
+    - name: Add SPN GC/{{ inventory_hostname }}
+      ansible.builtin.command: samba-tool spn add gc/{{ inventory_hostname }} {{ inventory_hostname.split('.')[0] }}$
+      ignore_errors: true
+
+    - name: Export keytab /etc/krb5.keytab
+      ansible.builtin.shell: >
+        samba-tool domain exportkeytab /etc/krb5.keytab
+        && samba-tool domain exportkeytab /etc/krb5.keytab --principal={{ inventory_hostname.split('.')[0] }}$
+
+    - name: Add principal to /etc/krb5.keytab
+      ansible.builtin.command: samba-tool domain exportkeytab /etc/krb5.keytab --principal={{ item }}/{{ inventory_hostname }}
+      loop:
+        - host
+        - gc
+        - ldap
+
+  when: not daldc_result_file_keytab.stat.exists
+
+- name: Enable kerberos method = dedicated keytab
+  ansible.builtin.lineinfile:
+    path: /etc/samba/smb.conf
+    regexp: '^#(.*)kerberos method'
+    line: "        kerberos method = dedicated keytab"
+
+- name: Dedicated keytab file = /etc/krb5.keytab
+  ansible.builtin.lineinfile:
+    path: /etc/samba/smb.conf
+    regexp: '^#(.*)dedicated keytab file'
+    line: "        dedicated keytab file = /etc/krb5.keytab"
+
+- name: Restart services samba
+  ansible.builtin.service:
+    name: samba
+    state: restarted

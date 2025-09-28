@@ -24,19 +24,21 @@
     line: "client_search={{ inventory_hostname }}"
 
 - block:
-    - name: Update SSH key
-      ansible.builtin.shell: rm -rf /etc/openssh/ssh_host_* && systemctl restart sshd.service
-
     - name: Set a machine-id
       ansible.builtin.shell: >
-        rm -f /etc/machine-id
-        && echo "" > /var/lib/dbus/machine-id
+        > /etc/machine-id
+        && > /var/lib/dbus/machine-id
         && systemd-machine-id-setup
         && cat /etc/machine-id > /var/lib/dbus/machine-id
 
+    - name: Update SSH key
+      ansible.builtin.shell: >
+        rm -rf /etc/openssh/ssh_host_*
+        && systemctl restart sshd.service
+
     - name: Unconditionally reboot the machine with all defaults
       ansible.builtin.reboot:
-        reboot_timeout: 600
+        reboot_timeout: 300
 
   when: daldc_result_set_hostname.changed == true
 

@@ -4,10 +4,10 @@
   register: daldc_result_check_dc
   ignore_errors: true
 
-- name: DC already exists
-  ansible.builtin.fail:
-    msg: DC already exists
-  when: daldc_result_check_dc.rc == 0
+# - name: DC already exists
+#   ansible.builtin.fail:
+#     msg: DC already exists
+#   when: daldc_result_check_dc.rc == 0
 
 - name: Check file existence /etc/samba/smb.conf
   ansible.builtin.stat:
@@ -22,19 +22,23 @@
     force: true
   when: daldc_result_file_smb.stat.exists
 
-- name: Remove file /etc/samba/smb.conf
-  ansible.builtin.file:
-    path: /etc/samba/smb.conf
-    state: absent
-  when: daldc_result_file_smb.stat.exists
+- block:
+    # Обязательно удаляем /etc/samba/smb.conf
+    - name: Remove file /etc/samba/smb.conf
+      ansible.builtin.file:
+        path: /etc/samba/smb.conf
+        state: absent
+      when: daldc_result_file_smb.stat.exists
 
-- name: Create primary DC
-  include_tasks: create_primary_dc.yml
-  when: daldc_create_domain | bool == true
+    - name: Create primary DC
+      include_tasks: create_primary_dc.yml
+      when: daldc_create_domain | bool == true
 
-- name: Join secondary DC to domain
-  include_tasks: join_secondary_dc_to_domain.yml
-  when: daldc_create_domain | bool == false
+    - name: Join secondary DC to domain
+      include_tasks: join_secondary_dc_to_domain.yml
+      when: daldc_create_domain | bool == false
+
+  when: daldc_result_check_dc.rc != 0
 
 - name: Set /etc/samba/smb.conf
   ansible.builtin.template:
@@ -43,14 +47,6 @@
     owner: root
     group: root
     mode: 0644
-
-# - name: Copy /var/lib/samba/private/krb5.conf to /etc/krb5.conf
-#   ansible.builtin.copy:
-#     src: /var/lib/samba/private/krb5.conf
-#     dest: /etc/krb5.conf
-#     remote_src: true
-#     force: true
-#     backup: true
 
 - name: Set /etc/krb5.conf
   ansible.builtin.template:
@@ -68,3 +64,6 @@
   loop:
     - samba
     - bind
+
+- name: Enable keytab usage
+  import_tasks: krb5_keytab.yml
