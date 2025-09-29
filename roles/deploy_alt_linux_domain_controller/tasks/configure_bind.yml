@@ -20,4 +20,4 @@
     dest: /etc/bind/options.conf
     owner: root
     group: named
-    mode: 0640
+    mode: "0640"

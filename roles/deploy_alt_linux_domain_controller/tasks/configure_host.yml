@@ -5,42 +5,46 @@
     use: systemd
   register: daldc_result_set_hostname
 
-- name: Set a hostname /etc/sysconfig/network
-  ansible.builtin.lineinfile:
-    path: /etc/sysconfig/network
-    regexp: '^HOSTNAME='
-    line: "HOSTNAME={{ inventory_hostname }}"
+- name: Set a machine-id and create new SSH key
+  when: daldc_result_set_hostname.changed # noqa: no-handler
+  block:
+    - name: Set a hostname /etc/sysconfig/network
+      ansible.builtin.lineinfile:
+        path: /etc/sysconfig/network
+        regexp: '^HOSTNAME='
+        line: "HOSTNAME={{ inventory_hostname }}"
 
-- name: Set a hostname /etc/alterator/dhcp/general
-  ansible.builtin.lineinfile:
-    path: /etc/alterator/dhcp/general
-    regexp: '^client_search='
-    line: "client_search={{ inventory_hostname }}"
+    - name: Set a hostname /etc/alterator/dhcp/general
+      ansible.builtin.lineinfile:
+        path: /etc/alterator/dhcp/general
+        regexp: '^client_search='
+        line: "client_search={{ inventory_hostname }}"
 
-- name: Set a hostname /etc/alterator/dhcp6/general
-  ansible.builtin.lineinfile:
-    path: /etc/alterator/dhcp6/general
-    regexp: '^client_search='
-    line: "client_search={{ inventory_hostname }}"
+    - name: Set a hostname /etc/alterator/dhcp6/general
+      ansible.builtin.lineinfile:
+        path: /etc/alterator/dhcp6/general
+        regexp: '^client_search='
+        line: "client_search={{ inventory_hostname }}"
 
-- block:
     - name: Set a machine-id
       ansible.builtin.shell: >
         > /etc/machine-id
         && > /var/lib/dbus/machine-id
         && systemd-machine-id-setup
         && cat /etc/machine-id > /var/lib/dbus/machine-id
+      register: daldc_result_set_machine_id
+      failed_when: daldc_result_set_machine_id.rc != 0
 
-    - name: Update SSH key
+    - name: Create new SSH key
       ansible.builtin.shell: >
         rm -rf /etc/openssh/ssh_host_*
         && systemctl restart sshd.service
+      register: daldc_result_create_ssh
+      failed_when: daldc_result_create_ssh.rc != 0
 
     - name: Unconditionally reboot the machine with all defaults
       ansible.builtin.reboot:
         reboot_timeout: 300
-
-  when: daldc_result_set_hostname.changed == true
 
 - name: Set DNS
   ansible.builtin.template:
@@ -48,7 +52,7 @@
     dest: "/etc/net/ifaces/{{ daldc_net_ifaces }}/resolv.conf"
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   register: daldc_result_set_dns
 
 - name: Set resolvconf
@@ -64,14 +68,14 @@
     name: NetworkManager
     state: restarted
   when: >
-    daldc_result_set_dns.changed == true
-    or daldc_result_set_resolvconf.changed == true
+    daldc_result_set_dns.changed
+    or daldc_result_set_resolvconf.changed
 
 - name: Update DNS
   ansible.builtin.command: resolvconf -u
   when: >
-    daldc_result_set_dns.changed == true
-    or daldc_result_set_resolvconf.changed == true
+    daldc_result_set_dns.changed
+    or daldc_result_set_resolvconf.changed
 
 - name: Generate SSH keypair for root
   community.crypto.openssh_keypair:

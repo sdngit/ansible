@@ -26,7 +26,7 @@
     dest: /etc/chrony.conf
     owner: root
     group: root
-    mode: 0640
+    mode: "0640"
   register: cntpc_result_set_chrony
 
 - name: Enable and start chronyd.service
@@ -35,11 +35,11 @@
     enabled: true
     state: started
 
-- name: Restart chronyd
-  ansible.builtin.service:
+- name: Restart the chronyd service
+  ansible.builtin.systemd_service:
     name: chronyd
     daemon-reload: true
     state: restarted
   when: >
-    cntpc_result_install_chrony.changed == true or
-    cntpc_result_set_chrony.changed == true
+    cntpc_result_install_chrony.changed
+    or cntpc_result_set_chrony.changed

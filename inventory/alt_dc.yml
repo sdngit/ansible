@@ -16,3 +16,5 @@ all:
               ansible_host: 192.168.0.51
             dc2.altdomain.test:
               ansible_host: 192.168.0.52
+            dc1.web.altdomain.test:
+              ansible_host: 192.168.0.54
