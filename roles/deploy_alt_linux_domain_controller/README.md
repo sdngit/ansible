@@ -126,13 +126,13 @@ daldc_allowed_dns_clients:
 Run:
 ```bash
 # Для создания нового домена
-$ ansible-playbook -i ./inventory.yml 01_deploy_alt_linux_domain_controller.yml --ask-pass -u root -l "dc1.test.alt" -e "daldc_create_domain=true"
+$ ansible-playbook -i ./inventory.yml deploy_alt_linux_domain_controller.yml --ask-pass -u root -l "dc1.test.alt" -e "daldc_create_domain=true"
 
 # Для ввода дополнительного контроллера домена в существующий домен
-$ ansible-playbook -i ./inventory.yml 01_deploy_alt_linux_domain_controller.yml --ask-pass -u root -l "dc2.test.alt"
+$ ansible-playbook -i ./inventory.yml deploy_alt_linux_domain_controller.yml --ask-pass -u root -l "dc2.test.alt"
 
 # Передать переменные через файл
-$ ansible-playbook -i ./inventory.yml 01_deploy_alt_linux_domain_controller.yml --ask-pass -u root -l "dc1.test.alt" -e "@some_file.yml"
+$ ansible-playbook -i ./inventory.yml deploy_alt_linux_domain_controller.yml --ask-pass -u root -l "dc1.test.alt" -e "@some_file.yml"
 ```
 
 

@@ -1,0 +1,23 @@
+---
+- name: Deploy freeradius
+  hosts: freeradius
+  gather_facts: false
+  become: yes
+  vars_prompt:
+    - name: cli_admin_AD_username
+      prompt: Enter the administrator AD username
+      private: false
+      default: "administrator"
+
+    - name: cli_admin_AD_pass
+      prompt: Enter the administrator AD password
+      unsafe: true
+      private: true
+
+    - name: cli_admin_AD_pass_retype
+      prompt: Re-type password
+      unsafe: true
+      private: true
+
+  roles:
+    - deploy_freeradius

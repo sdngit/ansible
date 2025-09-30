@@ -79,4 +79,4 @@
   when: daldc_result_set_resolv.changed == true
 
 - name: Configure replication
-  import_tasks: configure_replication.yml
+  ansible.builtin.import_tasks: configure_replication.yml

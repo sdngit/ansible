@@ -1,0 +1,29 @@
+includedir /etc/krb5.conf.d/
+
+[logging]
+ default = FILE:/var/log/krb5libs.log
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+ dns_lookup_kdc = true
+ dns_lookup_realm = false
+ ticket_lifetime = 24h
+ renew_lifetime = 7d
+ forwardable = true
+ rdns = false
+ pkinit_anchors = FILE:/etc/pki/tls/certs/ca-bundle.crt
+ spake_preauth_groups = edwards25519
+ dns_canonicalize_hostname = fallback
+ qualify_shortname = ""
+ default_realm = {{ dfr_domain_name | upper }}
+ default_ccache_name = KEYRING:persistent:%{uid}
+
+[realms]
+{{ dfr_domain_name | upper }} = {
+ default_domain = {{ dfr_domain_name | lower }}
+}
+
+[domain_realm]
+ .{{ dfr_domain_name | lower }} = {{ dfr_domain_name | upper }}
+ {{ dfr_domain_name | lower }} = {{ dfr_domain_name | upper }}

@@ -6,7 +6,7 @@ all:
         alt_dc_prod:
           hosts:
             dc3.prod.alt:
-              ansible_host: 192.168.0.60
+              ansible_host: 192.168.0.55
 
         alt_dc_test:
           hosts:

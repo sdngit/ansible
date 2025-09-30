@@ -61,8 +61,8 @@ cntpc_allowed_ntp_clients:
 
 Run:
 ```bash
-$ ansible-playbook -i ./inventory.yml 02_configure_ntp_chrony.yml --ask-pass -u root -l "dc1.test.alt"
-$ ansible-playbook -i ./inventory.yml 02_configure_ntp_chrony.yml --ask-pass -u root -l "dc1.test.alt" -e "@some_file.yml"
+$ ansible-playbook -i ./inventory.yml configure_ntp_chrony.yml --ask-pass -u root -l "dc1.test.alt"
+$ ansible-playbook -i ./inventory.yml configure_ntp_chrony.yml --ask-pass -u root -l "dc1.test.alt" -e "@some_file.yml"
 ```
 
 

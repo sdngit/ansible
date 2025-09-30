@@ -1,0 +1,28 @@
+# See smb.conf.example for a more detailed config file or
+# read the smb.conf manpage.
+# Run 'testparm' to verify the config is correct after
+# you modified it.
+#
+# Note:
+# SMB1 is disabled by default. This means clients without support for SMB2 or
+# SMB3 are no longer able to connect to smbd (by default).
+
+[global]
+        realm = {{ dfr_domain_name | upper }}
+        workgroup = {{ inventory_hostname.split('.')[1] | upper }}
+        idmap_ldb:use rfc2307  = yes
+
+        security = ads
+        password server = {{ dfr_domain_controllers | join(' ') }}
+        idmap config * : backend = tdb
+        idmap config * : range = 10000-999999
+#        idmap config EXAMPLE : backend = rid
+#        idmap config EXAMPLE : range = 10000-999999
+        winbind use default domain = true
+        winbind offline logon = false
+        ntlm auth = mschapv2-and-ntlmv2-only
+        winbind enum users = yes
+        winbind enum groups = yes
+        winbind nested groups = yes
+        template shell = /bin/bash
+        template homedir = /home/%D/%U

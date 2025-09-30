@@ -1,0 +1,78 @@
+---
+- name: Set /etc/krb5.conf
+  ansible.builtin.template:
+    src: templates/krb5.conf.j2
+    dest: /etc/krb5.conf
+    owner: root
+    group: root
+    mode: '0644'
+  register: dfr_result_set_krb
+
+- name: kinit
+  args:
+    executable: /usr/bin/expect
+  ansible.builtin.shell: |
+    spawn kinit {{ dfr_admin_AD_username }}@{{ dfr_domain_name | upper }}
+    expect -exact "Password for {{ dfr_admin_AD_username }}@{{ dfr_domain_name | upper }}:"
+    send -- "{{ dfr_admin_AD_pass }}\n"
+    expect eof
+  no_log: true
+
+- name: klist
+  ansible.builtin.command: klist
+
+- name: The machine is already joined to the domain
+  ansible.builtin.command: net ads testjoin
+  changed_when: dfr_result_check_joined.rc != 0
+  ignore_errors: true
+  register: dfr_result_check_joined
+
+- name: Join to domain {{ dfr_domain_name }}
+  ansible.builtin.command: net ads join -U '{{ dfr_admin_AD_username }}%{{ dfr_admin_AD_pass }}'
+  no_log: true
+  when: dfr_result_check_joined.rc != 0
+
+- name: Enable and start winbind.service
+  ansible.builtin.service:
+    name: winbind
+    enabled: true
+    state: started
+  when: dfr_result_check_joined.rc == 0
+
+- name: Enable and restart winbind.service
+  ansible.builtin.service:
+    name: winbind
+    enabled: true
+    state: restarted
+  when: dfr_result_check_joined.rc != 0
+
+# - name: Check authentication domain user
+#   ansible.builtin.command: wbinfo -a '{{ dfr_admin_AD_username }}%{{ dfr_admin_AD_pass }}'
+#   no_log: true
+
+- name: Backup config winbind authselect
+  ansible.builtin.command: authselect select winbind with-mkhomedir -b
+
+- name: Enable winbind authselect
+  ansible.builtin.command: authselect select winbind with-mkhomedir
+
+- name: Enable and restart oddjobd.service
+  ansible.builtin.service:
+    name: oddjobd
+    enabled: true
+    state: restarted
+
+- name: Set SSH config
+  ansible.builtin.template:
+    src: templates/20-winbind.conf.j2
+    dest: /etc/ssh/sshd_config.d/20-winbind.conf
+    owner: root
+    group: root
+    mode: '0600'
+  register: dfr_result_set_ssh
+
+- name: Restart sshd.service
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+  when: dfr_result_set_ssh.changed

@@ -1,0 +1,13 @@
+---
+# Сетевой интерфейс требуется для настройки DNS
+dfr_net_ifaces: eth0
+
+dfr_dns4_servers:
+  - 192.168.0.51
+  - 192.168.0.52
+  - 192.168.0.53
+
+dfr_domain_controllers:
+  - dc1.altdomain.test
+  - dc2.altdomain.test
+  - dc3.altdomain.test
