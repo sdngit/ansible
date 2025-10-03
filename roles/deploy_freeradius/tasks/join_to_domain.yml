@@ -23,9 +23,13 @@
 
 - name: The machine is already joined to the domain
   ansible.builtin.command: net ads testjoin
-  changed_when: dfr_result_check_joined.rc != 0
-  ignore_errors: true
   register: dfr_result_check_joined
+  changed_when:
+    - dfr_result_check_joined.rc != 0
+    - "'Join to domain is not valid' in dfr_result_check_joined.stderr"
+  failed_when:
+    - dfr_result_check_joined.rc != 0
+    - "'Join to domain is not valid' not in dfr_result_check_joined.stderr"
 
 - name: Join to domain {{ dfr_domain_name }}
   ansible.builtin.command: net ads join -U '{{ dfr_admin_AD_username }}%{{ dfr_admin_AD_pass }}'

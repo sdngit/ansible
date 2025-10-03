@@ -28,3 +28,7 @@
 - name: Join to domain
   ansible.builtin.import_tasks: join_to_domain.yml
   tags: dfr_join_to_domain
+
+- name: Configure freeradius
+  ansible.builtin.import_tasks: configure_freeradius.yml
+  tags: dfr_configure_freeradius

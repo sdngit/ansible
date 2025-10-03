@@ -3,6 +3,7 @@ dfr_install_packages:
   - expect
   - freeradius
   - freeradius-utils
+  - freeradius-krb5
   - samba
   - samba-winbind
   - samba-client
@@ -10,6 +11,7 @@ dfr_install_packages:
   - oddjob
   - oddjob-mkhomedir
   - samba-winbind-clients
+  - samba-common-tools
 
 dfr_domain_name: "{{ inventory_hostname.split('.')[1] }}.{{ inventory_hostname.split('.')[2] }}"
 

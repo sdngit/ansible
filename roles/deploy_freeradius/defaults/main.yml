@@ -11,3 +11,13 @@ dfr_domain_controllers:
   - dc1.altdomain.test
   - dc2.altdomain.test
   - dc3.altdomain.test
+
+dfr_radius_clients:
+  Network_test:
+    ipaddr: 192.168.0.0/24
+    secret: "{{ dfr_vault_secret_radius_clients['Network_test'] }}"
+    comment: "network test1"
+  WiFi_test:
+    ipaddr: 192.168.1.0/24
+    secret: "{{ dfr_vault_secret_radius_clients['WiFi_test'] }}"
+    comment: "network test2"

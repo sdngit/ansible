@@ -20,8 +20,7 @@ daldc_stop_services:
   - bind.service
 
 daldc_admin_AD_username: "{{ cli_admin_AD_username }}"
-#daldc_admin_AD_pass: "{{ cli_admin_AD_pass }}"
-daldc_admin_AD_pass: 'Qwerty12@'
+daldc_admin_AD_pass: "{{ cli_admin_AD_pass }}"
 
 # Получить IP адреса хостов группы из inventory файла
 daldc_list_ip_dc: "{{ groups[daldc_group_servers] | map('extract', hostvars, ['ansible_host']) | select('defined') | join(' ') }}"
