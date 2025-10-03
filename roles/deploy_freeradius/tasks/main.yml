@@ -1,0 +1,34 @@
+---
+# - name: Check the variable dfr_admin_AD_pass
+#   ansible.builtin.assert:
+#     that:
+#       - cli_admin_AD_pass | length > 0
+#     fail_msg: The variable is empty!
+#     quiet: true
+
+# - name: Checking password matches
+#   ansible.builtin.assert:
+#     that:
+#       - cli_admin_AD_pass == cli_admin_AD_pass_retype
+#     fail_msg: Sorry, passwords do not match.
+#     quiet: true
+
+- name: Configure host
+  ansible.builtin.import_tasks: configure_host.yml
+  tags: dfr_configure_host
+
+- name: Install packages
+  ansible.builtin.import_tasks: install_packages.yml
+  tags: dfr_install_packages
+
+- name: Configure smb
+  ansible.builtin.import_tasks: configure_smb.yml
+  tags: dfr_configure_smb
+
+- name: Join to domain
+  ansible.builtin.import_tasks: join_to_domain.yml
+  tags: dfr_join_to_domain
+
+- name: Configure freeradius
+  ansible.builtin.import_tasks: configure_freeradius.yml
+  tags: dfr_configure_freeradius

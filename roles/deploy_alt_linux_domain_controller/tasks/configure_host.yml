@@ -52,7 +52,7 @@
     dest: "/etc/net/ifaces/{{ daldc_net_ifaces }}/resolv.conf"
     owner: root
     group: root
-    mode: "0644"
+    mode: '0644'
   register: daldc_result_set_dns
 
 - name: Set resolvconf

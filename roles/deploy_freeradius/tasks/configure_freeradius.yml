@@ -1,0 +1,96 @@
+---
+- name: Include vars/vault_pass.yml
+  ansible.builtin.include_vars: vars/vault_pass.yml
+
+- name: Set /etc/krb5.conf
+  ansible.builtin.template:
+    src: templates/ntlm_auth.j2
+    dest: /etc/raddb/mods-available/ntlm_auth
+    owner: root
+    group: radiusd
+    mode: '0640'
+
+- name: Check ntlm_auth /etc/raddb/sites-available/default
+  ansible.builtin.command: egrep ntlm_auth /etc/raddb/sites-available/default
+  register: dfr_result_check_ntlm_auth_default
+  changed_when:
+    - dfr_result_check_ntlm_auth_default.rc != 0
+    - dfr_result_check_ntlm_auth_default.stderr | length == 0
+  failed_when:
+    - dfr_result_check_ntlm_auth_default.rc != 0
+    - dfr_result_check_ntlm_auth_default.stderr | length > 0
+
+- name: Set /etc/raddb/sites-available/default
+  ansible.builtin.lineinfile:
+    path: /etc/raddb/sites-available/default
+    line: "\n\tAuth-Type NTLM_AUTH {\n\t\tntlm_auth\n\t}\n\n\tntlm_auth\n"
+    insertafter: 'authenticate {'
+  when: dfr_result_check_ntlm_auth_default.rc != 0
+
+- name: Check ntlm_auth /etc/raddb/sites-available/inner-tunnel
+  ansible.builtin.command: egrep ntlm_auth /etc/raddb/sites-available/inner-tunnel
+  register: dfr_result_check_ntlm_auth_tunnel
+  changed_when:
+    - dfr_result_check_ntlm_auth_tunnel.rc != 0
+    - dfr_result_check_ntlm_auth_tunnel.stderr | length == 0
+  failed_when:
+    - dfr_result_check_ntlm_auth_tunnel.rc != 0
+    - dfr_result_check_ntlm_auth_tunnel.stderr | length > 0
+
+- name: Set /etc/raddb/sites-available/inner-tunnel
+  ansible.builtin.lineinfile:
+    path: /etc/raddb/sites-available/inner-tunnel
+    line: "\n\tAuth-Type NTLM_AUTH {\n\t\tntlm_auth\n\t}\n\n\tntlm_auth\n"
+    insertafter: 'authenticate {'
+  when: dfr_result_check_ntlm_auth_tunnel.rc != 0
+
+- name: Set /etc/raddb/mods-available/mschap
+  ansible.builtin.template:
+    src: templates/mschap.j2
+    dest: /etc/raddb/mods-available/mschap
+    owner: root
+    group: radiusd
+    mode: '0640'
+
+- name: Generate TLS for EAP
+  ansible.builtin.command: /etc/raddb/certs/bootstrap
+  register: dfr_result_generate_tls
+  changed_when: "'openssl' in dfr_result_generate_tls.stdout"
+
+- name: Check authenticate ntlm_auth /etc/raddb/users
+  ansible.builtin.lineinfile:
+    path: /etc/raddb/users
+    search_string: 'DEFAULT Auth-Type = ntlm_auth'
+    line: 'DEFAULT Auth-Type = ntlm_auth'
+    state: absent
+  check_mode: true
+  register: dfr_result_check_ntlm_auth_users
+  changed_when: dfr_result_check_ntlm_auth_users.found == 0
+
+- name: Set /etc/raddb/users
+  ansible.builtin.lineinfile:
+    path: /etc/raddb/users
+    line: "DEFAULT Auth-Type = ntlm_auth"
+    insertbefore: BOF
+  when: dfr_result_check_ntlm_auth_users.found == 0
+
+- name: Set /etc/raddb/clients.conf
+  ansible.builtin.template:
+    src: templates/clients.conf.j2
+    dest: /etc/raddb/clients.conf
+    owner: root
+    group: radiusd
+    mode: '0640'
+
+- name: Add existing user radiusd to group wbpriv
+  ansible.builtin.user:
+    name: radiusd
+    groups: wbpriv
+    append: true
+
+- name: Enable and restart radiusd.service
+  ansible.builtin.systemd_service:
+    name: radiusd
+    daemon-reload: true
+    enabled: true
+    state: restarted

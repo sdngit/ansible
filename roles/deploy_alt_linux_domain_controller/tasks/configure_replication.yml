@@ -30,7 +30,7 @@
         dest: "/etc/osync/sync_{{ inventory_hostname }}.conf"
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
 
     - name: Creates a cron file under /etc/cron.d/sysvol
       ansible.builtin.lineinfile:

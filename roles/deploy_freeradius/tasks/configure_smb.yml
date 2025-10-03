@@ -1,0 +1,23 @@
+---
+- name: Set /etc/smb.conf
+  ansible.builtin.template:
+    src: templates/smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: '0644'
+  register: dfr_result_set_smb
+
+- name: Enable and start smb.service
+  ansible.builtin.service:
+    name: smb
+    enabled: true
+    state: started
+  when: not dfr_result_set_smb.changed
+
+- name: Enable and restart smb.service
+  ansible.builtin.service:
+    name: smb
+    enabled: true
+    state: restarted
+  when: dfr_result_set_smb.changed

@@ -1,34 +1,34 @@
 ---
-# - name: Check the variable daldc_admin_AD_pass
-#   ansible.builtin.assert:
-#     that:
-#       - cli_admin_AD_pass | length > 0
-#     fail_msg: The variable is empty!
-#     quiet: true
+- name: Check the variable daldc_admin_AD_pass
+  ansible.builtin.assert:
+    that:
+      - cli_admin_AD_pass | length > 0
+    fail_msg: The variable is empty!
+    quiet: true
 
-# - name: Checking password matches
-#   ansible.builtin.assert:
-#     that:
-#       - cli_admin_AD_pass == cli_admin_AD_pass_retype
-#     fail_msg: Sorry, passwords do not match.
-#     quiet: true
+- name: Checking password matches
+  ansible.builtin.assert:
+    that:
+      - cli_admin_AD_pass == cli_admin_AD_pass_retype
+    fail_msg: Sorry, passwords do not match.
+    quiet: true
 
 - name: Configure host
-  import_tasks: configure_host.yml
+  ansible.builtin.import_tasks: configure_host.yml
   tags: daldc_configure_host
 
 - name: Install packages
-  import_tasks: install_packages.yml
+  ansible.builtin.import_tasks: install_packages.yml
   tags: daldc_install_packages
 
 - name: Stop services
-  import_tasks: stop_services.yml
+  ansible.builtin.import_tasks: stop_services.yml
   tags: daldc_stop_services
 
 - name: Configure Bind
-  import_tasks: configure_bind.yml
+  ansible.builtin.import_tasks: configure_bind.yml
   tags: daldc_configure_bind
 
 - name: Create domain controller
-  import_tasks: create_domain_controller.yml
+  ansible.builtin.import_tasks: create_domain_controller.yml
   tags: daldc_create_DC

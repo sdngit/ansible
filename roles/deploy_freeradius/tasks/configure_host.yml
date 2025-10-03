@@ -1,0 +1,44 @@
+---
+- name: Set IPv4 DNS server addresses
+  community.general.nmcli:
+    conn_name: "{{ dfr_net_ifaces }}"
+    type: ethernet
+    dns4: "{{ dfr_dns4_servers }}"
+    dns4_search: "{{ dfr_dns4_search }}"
+    state: present
+  register: dfr_result_set_dns
+
+- name: Restart NetworkManager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+  when: dfr_result_set_dns.changed
+
+- name: Set a hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+    use: systemd
+  register: dfr_result_set_hostname
+
+- name: Set a machine-id and create new SSH key
+  when: dfr_result_set_hostname.changed # noqa: no-handler
+  block:
+    - name: Set a machine-id
+      ansible.builtin.shell: >
+        > /etc/machine-id
+        && > /var/lib/dbus/machine-id
+        && systemd-machine-id-setup
+        && cat /etc/machine-id > /var/lib/dbus/machine-id
+      register: dfr_result_set_machine_id
+      failed_when: dfr_result_set_machine_id.rc != 0
+
+    - name: Create new SSH key
+      ansible.builtin.shell: >
+        rm -rf /etc/openssh/ssh_host_*
+        && systemctl restart sshd.service
+      register: dfr_result_create_ssh
+      failed_when: dfr_result_create_ssh.rc != 0
+
+    - name: Unconditionally reboot the machine with all defaults
+      ansible.builtin.reboot:
+        reboot_timeout: 300

@@ -1,0 +1,22 @@
+---
+dfr_install_packages:
+  - expect
+  - freeradius
+  - freeradius-utils
+  - freeradius-krb5
+  - samba
+  - samba-winbind
+  - samba-client
+  - krb5-workstation
+  - oddjob
+  - oddjob-mkhomedir
+  - samba-winbind-clients
+  - samba-common-tools
+
+dfr_domain_name: "{{ inventory_hostname.split('.')[1] }}.{{ inventory_hostname.split('.')[2] }}"
+
+dfr_dns4_search: "{{ dfr_domain_name }}"
+
+dfr_admin_AD_username: "{{ cli_admin_AD_username }}"
+#dfr_admin_AD_pass: "{{ cli_admin_AD_pass }}"
+dfr_admin_AD_pass: 'Qwerty12@'
