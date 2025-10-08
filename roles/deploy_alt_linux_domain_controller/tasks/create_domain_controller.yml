@@ -63,3 +63,7 @@
 
 - name: Enable keytab usage
   ansible.builtin.import_tasks: krb5_keytab.yml
+
+- name: Configure replication
+  ansible.builtin.import_tasks: configure_replication.yml
+  when: daldc_result_check_dc.rc != 0
