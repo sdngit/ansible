@@ -1,6 +1,7 @@
 ---
 - name: Check if the DC already exists
-  ansible.builtin.command: samba-tool domain info 127.0.0.1
+  delegate_to: "{{ daldc_ip_primary_dc }}"
+  ansible.builtin.command: samba-tool domain info {{ ansible_host }}
   register: daldc_result_check_dc
   ignore_errors: true
 
@@ -63,7 +64,3 @@
 
 - name: Enable keytab usage
   ansible.builtin.import_tasks: krb5_keytab.yml
-
-- name: Configure replication
-  ansible.builtin.import_tasks: configure_replication.yml
-  when: daldc_result_check_dc.rc != 0

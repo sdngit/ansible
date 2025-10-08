@@ -11,6 +11,7 @@ daldc_install_packages:
   - sssd
   - sssd-ad
   - task-auth-ad-sssd
+  - admc
 
 daldc_stop_services:
   - smb.service

@@ -32,3 +32,8 @@
 - name: Create domain controller
   ansible.builtin.import_tasks: create_domain_controller.yml
   tags: daldc_create_DC
+
+- name: Configure replication
+  ansible.builtin.import_tasks: configure_replication.yml
+  when: daldc_create_domain | bool == false
+  tags: daldc_configure_replication
