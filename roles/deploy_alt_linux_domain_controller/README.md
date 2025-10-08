@@ -24,6 +24,7 @@ Role Description
 > - /etc/cron.d/idmap
 > - /root/.ssh/known_hosts
 > - /root/.ssh/authorized_keys
+> Либо запустить для SDC playbook с тэгом "daldc_configure_replication", не забыв указать нового PDC.
 
 
 Назначет хосту имя в соответствии с тем, как он указан в `inventory`. \

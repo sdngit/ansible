@@ -3,7 +3,12 @@
   delegate_to: "{{ daldc_ip_primary_dc }}"
   ansible.builtin.command: samba-tool domain info {{ ansible_host }}
   register: daldc_result_check_dc
-  ignore_errors: true
+  changed_when:
+    - "'Invalid IP address' in daldc_result_check_dc.stderr"
+  failed_when:
+    - daldc_result_check_dc.rc != 0
+    - "'Invalid IP address' not in daldc_result_check_dc.stderr"
+#  ignore_errors: true
 
 - name: Check file existence /etc/samba/smb.conf
   ansible.builtin.stat:

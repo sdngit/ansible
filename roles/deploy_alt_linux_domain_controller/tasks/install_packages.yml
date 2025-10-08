@@ -3,9 +3,3 @@
   ansible.builtin.package:
     name: "{{ daldc_install_packages }}"
     state: present
-
-- name: Install packages on "{{ daldc_ip_primary_dc }}"
-  delegate_to: "{{ daldc_ip_primary_dc }}"
-  ansible.builtin.package:
-    name: osync
-    state: present

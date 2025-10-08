@@ -1,6 +1,7 @@
 ---
 - name: Setting up an SSH connection between domain controllers
   ansible.builtin.import_tasks: setting_ssh_connection.yml
+  tags: daldc_configure_replication
 
 - name: Execute on {{ daldc_ip_primary_dc }}
   delegate_to: "{{ daldc_ip_primary_dc }}"
@@ -50,6 +51,7 @@
     - name: Sync SysVol
       ansible.builtin.command: /usr/bin/osync.sh /etc/osync/sync_{{ inventory_hostname }}.conf
       ignore_errors: true
+  tags: daldc_configure_replication
 
 - name: Create /etc/cron.d/idmap
   ansible.builtin.cron:
@@ -63,6 +65,7 @@
       && if ! samba-tool ntacl sysvolcheck; then samba-tool ntacl sysvolreset; fi
       && systemctl restart samba.service >/dev/null 2>&1
     cron_file: idmap
+  tags: daldc_configure_replication
 
 - name: Sync idmap.ldb
   ansible.builtin.shell: >
@@ -70,3 +73,4 @@
     && net cache flush
     && if ! samba-tool ntacl sysvolcheck; then samba-tool ntacl sysvolreset; fi
     && systemctl restart samba.service
+  tags: daldc_configure_replication
