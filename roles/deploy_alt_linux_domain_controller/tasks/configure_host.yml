@@ -42,7 +42,7 @@
       register: daldc_result_create_ssh
       failed_when: daldc_result_create_ssh.rc != 0
 
-    - name: Unconditionally reboot the machine with all defaults
+    - name: Reboot host
       ansible.builtin.reboot:
         reboot_timeout: 300
 

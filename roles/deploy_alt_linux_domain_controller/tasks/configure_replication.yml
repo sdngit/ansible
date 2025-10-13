@@ -5,6 +5,7 @@
 
 - name: Execute on {{ daldc_ip_primary_dc }}
   delegate_to: "{{ daldc_ip_primary_dc }}"
+  tags: daldc_configure_replication
   block:
     - name: Check file existence idmap.ldb.
       ansible.builtin.stat:
@@ -51,7 +52,6 @@
     - name: Sync SysVol
       ansible.builtin.command: /usr/bin/osync.sh /etc/osync/sync_{{ inventory_hostname }}.conf
       ignore_errors: true
-  tags: daldc_configure_replication
 
 - name: Create /etc/cron.d/idmap
   ansible.builtin.cron:

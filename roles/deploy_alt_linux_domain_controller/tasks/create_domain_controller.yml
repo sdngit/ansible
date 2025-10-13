@@ -24,6 +24,7 @@
   when: daldc_result_file_smb.stat.exists
 
 - name: Deploy DC
+  when: daldc_result_check_dc.rc != 0
   block:
     # Обязательно удаляем /etc/samba/smb.conf
     - name: Remove file /etc/samba/smb.conf
@@ -33,14 +34,12 @@
       when: daldc_result_file_smb.stat.exists
 
     - name: Create primary DC
-      include_tasks: create_primary_dc.yml
+      ansible.builtin.include_tasks: create_primary_dc.yml
       when: daldc_create_domain | bool == true
 
     - name: Join secondary DC to domain
-      include_tasks: join_secondary_dc_to_domain.yml
+      ansible.builtin.include_tasks: join_secondary_dc_to_domain.yml
       when: daldc_create_domain | bool == false
-
-  when: daldc_result_check_dc.rc != 0
 
 - name: Set /etc/samba/smb.conf
   ansible.builtin.template:
