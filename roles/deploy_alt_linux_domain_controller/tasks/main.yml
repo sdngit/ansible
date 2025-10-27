@@ -1,17 +1,7 @@
 ---
-- name: Check the variable daldc_admin_AD_pass
-  ansible.builtin.assert:
-    that:
-      - cli_admin_AD_pass | length > 0
-    fail_msg: The variable is empty!
-    quiet: true
-
-- name: Checking password matches
-  ansible.builtin.assert:
-    that:
-      - cli_admin_AD_pass == cli_admin_AD_pass_retype
-    fail_msg: Sorry, passwords do not match.
-    quiet: true
+- name: Check input values
+  ansible.builtin.import_tasks: check_input_values.yml
+  tags: daldc_check_input_values
 
 - name: Configure host
   ansible.builtin.import_tasks: configure_host.yml
@@ -19,7 +9,9 @@
 
 - name: Install packages
   ansible.builtin.import_tasks: install_packages.yml
-  tags: daldc_install_packages
+  tags:
+    - daldc_install_packages
+    - daldc_configure_replication
 
 - name: Stop services
   ansible.builtin.import_tasks: stop_services.yml

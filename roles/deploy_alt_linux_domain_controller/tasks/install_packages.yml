@@ -1,5 +1,14 @@
 ---
 - name: Install packages
+  ansible.builtin.apt:
+    name: "{{ daldc_install_packages }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_distribution == "Altlinux"
+
+- name: Install packages
   ansible.builtin.package:
     name: "{{ daldc_install_packages }}"
     state: present
+  when: ansible_distribution != "Altlinux"

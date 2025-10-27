@@ -26,11 +26,6 @@
           && tdbbackup -s .bak /var/lib/samba/private/idmap.ldb >/dev/null 2>&1"
         cron_file: idmap
 
-    - name: Install osync
-      ansible.builtin.package:
-        name: osync
-        state: present
-
     - name: Create config sync SysVol
       ansible.builtin.template:
         src: templates/sync.conf.j2
