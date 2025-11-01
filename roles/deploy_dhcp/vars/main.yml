@@ -1,0 +1,3 @@
+---
+ddhcp_install_packages:
+  - dhcp-server

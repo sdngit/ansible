@@ -68,10 +68,3 @@ $ ansible-playbook -i ./inventory.yml configure_ntp_chrony.yml --ask-pass -u roo
 
 License
 -------
-
-
-
-Author Information
-------------------
-
-https://github.com/sdngit

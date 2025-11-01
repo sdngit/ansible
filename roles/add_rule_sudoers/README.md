@@ -97,10 +97,3 @@ Run:
 
 License
 -------
-
-
-
-Author Information
-------------------
-
-https://github.com/sdngit

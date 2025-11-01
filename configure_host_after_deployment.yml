@@ -1,0 +1,7 @@
+---
+- name: Configure host after deployment
+  hosts: all
+  gather_facts: false
+  become: true
+  roles:
+    - configure_host_after_deployment

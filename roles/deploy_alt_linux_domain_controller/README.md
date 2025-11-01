@@ -139,10 +139,3 @@ $ ansible-playbook -i ./inventory.yml deploy_alt_linux_domain_controller.yml --a
 
 License
 -------
-
-
-
-Author Information
-------------------
-
-https://github.com/sdngit
