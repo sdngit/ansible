@@ -1,0 +1,21 @@
+---
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Create file with info
+  delegate_to: localhost
+  block:
+    - name: Create CSV file with header
+      ansible.builtin.copy:
+        dest: "{{ giaip_file_info_path }}"
+        content: "Hostname;IP;Package;Version;Source;vCPUs\n"
+        force: false
+
+    - name: Append file
+      ansible.builtin.lineinfile:
+        path: "{{ giaip_file_info_path }}"
+        line: "{{ inventory_hostname }};{{ ansible_host }};{{ item.key }};{{ item.value[0]['version'] }};{{ item.value[0]['source'] }};{{ ansible_facts['processor_vcpus'] }}"
+        insertafter: EOF
+        create: yes
+      loop: "{{ ansible_facts.packages | dict2items | selectattr('key', 'match', giaip_package_name_regex ) | list }}"
