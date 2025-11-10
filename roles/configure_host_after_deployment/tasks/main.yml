@@ -1,5 +1,5 @@
 ---
-- name: Set IPv4 DNS server addresses
+- name: Set IPv4 DNS addresses
   community.general.nmcli:
     conn_name: "{{ chad_net_ifaces }}"
     type: ethernet
@@ -23,21 +23,45 @@
 - name: Set a machine-id and create new SSH key
   when: chad_result_set_hostname.changed # noqa: no-handler
   block:
-    - name: Set a machine-id
-      ansible.builtin.shell: >
-        > /etc/machine-id
-        && systemd-machine-id-setup
-      #  && cat /etc/machine-id > /var/lib/dbus/machine-id
-      register: chad_result_set_machine_id
-      failed_when: chad_result_set_machine_id.rc != 0
+    - name: Delete a machine-id
+      ansible.builtin.copy:
+        dest: /etc/machine-id
+        content: ""
 
-    - name: Create new SSH key
-      ansible.builtin.shell: >
-        rm -rf /etc/openssh/ssh_host_*
-        && systemctl restart sshd.service
-      register: chad_result_create_ssh
-      failed_when: chad_result_create_ssh.rc != 0
+    - name: Delete a machine-id for Altlinux
+      ansible.builtin.copy:
+        dest: /var/lib/dbus/machine-id
+        content: ""
+      when: ansible_distribution == "Altlinux"
+
+    - name: Create new a machine-id
+      ansible.builtin.command: systemd-machine-id-setup
+
+    - name: Copy machine-id to /var/lib/dbus/machine-id for Altlinux
+      ansible.builtin.copy:
+        src: /etc/machine-id
+        dest: /var/lib/dbus/machine-id
+        remote_src: yes
+      when: ansible_distribution == "Altlinux"
+
+    - name: Remove old host SSH-keys
+      ansible.builtin.shell: rm -rf /etc/ssh/ssh_host_*
+
+    - name: Remove old host SSH-keys for Altlinux
+      ansible.builtin.shell: rm -rf /etc/ssh/ssh_host_*
+      when: ansible_distribution == "Altlinux"
+
+    - name: Restart sshd.servie
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
 
     - name: Reboot host
       ansible.builtin.reboot:
         reboot_timeout: 300
+
+  rescue:
+    - name: Roll back a hostname
+      ansible.builtin.hostname:
+        name: "{{ chad_result_set_hostname.diff.before.split('=')[1] | trim }}"
+        use: systemd
