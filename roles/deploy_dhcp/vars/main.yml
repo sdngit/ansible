@@ -1,3 +1,15 @@
 ---
 ddhcp_install_packages:
   - dhcp-server
+
+ddhcp_omapi_key: "{{ ddhcp_vault_omapi_key }}"
+ddhcp_omapi_algorithm: "{{ ddhcp_vault_omapi_algorithm }}"
+ddhcp_omapi_secret: "{{ ddhcp_vault_omapi_secret }}"
+
+# Название площадки, на которой размещен сервер.
+# Берется из inventory
+#ddhcp_placement: >-
+#  {{ (group_names | reject('in', ['all','ungrouped']) | list)[1]
+#  | default('Test') }}
+
+ddhcp_short_network: "{{ ansible_host.split('.')[:3] | join('.') }}"

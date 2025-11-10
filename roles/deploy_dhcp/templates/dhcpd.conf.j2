@@ -1,0 +1,31 @@
+failover peer "failover-dhcp" {
+{% if ddhcp_primary_node == true %}
+  primary; # главный сервер
+  mclt 3600;
+  split 128;
+{% else %}
+  secondary; # дублирующий сервер
+{% endif %}
+  address {{ ansible_host }}; # текущий хост
+  port 647;
+  peer address {{ ddhcp_secondary_node_ip }}; # дублирующий хост
+  peer port 647;
+  max-response-delay 60;
+  max-unacked-updates 10;
+  load balance max seconds 3;
+}
+
+authoritative;
+default-lease-time 86400; # 1 день
+max-lease-time 86400; # 1 день
+update-static-leases on;
+one-lease-per-client on;
+
+omapi-port 7911;
+omapi-key {{ ddhcp_omapi_key }};
+key {{ ddhcp_omapi_key }} {
+     algorithm {{ ddhcp_vault_omapi_algorithm }};
+     secret {{ ddhcp_omapi_secret }};
+}
+
+include "/etc/dhcp/dhcpd.d/subnets.conf";

@@ -1,5 +1,8 @@
 ---
 - name: Install packages
   ansible.builtin.import_tasks: install_packages.yml
-  tags:
-    - ddhcp_install_packages
+  tags: ddhcp_install_packages
+
+- name: Configure DHCP
+  ansible.builtin.import_tasks: configure_dhcp.yml
+  tags: ddhcp_configure_dhcp

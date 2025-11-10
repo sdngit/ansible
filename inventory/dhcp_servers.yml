@@ -2,6 +2,22 @@
 all:
   children:
     dhcp_servers:
-      hosts:
-        dhcp-test:
-          ansible_host: 192.168.0.138
+      children:
+        ostp_placement:
+          hosts:
+            ostp-dhcp-test-p:
+              ansible_host: 192.168.0.138
+              g_primary_node: true
+              g_secondary_node_ip: 192.168.0.140
+            ostp-dhcp-test-s:
+              ansible_host: 192.168.0.140
+              g_secondary_node_ip: 192.168.0.138
+        ekb_placement:
+          hosts:
+            ekb-dhcp-test-p:
+              ansible_host: 192.168.0.141
+              g_primary_node: true
+              g_secondary_node_ip: 192.168.0.142
+            ekb-dhcp-test-s:
+              ansible_host: 192.168.0.142
+              g_secondary_node_ip: 192.168.0.141

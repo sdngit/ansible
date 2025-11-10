@@ -1,0 +1,25 @@
+---
+ddhcp_domain_search:
+  - rt-dc.local
+  - rt-dc.ru
+
+ddhcp_netmask: 255.255.255.0
+
+ddhcp_dns:
+  - "{{ ddhcp_short_network }}.110"
+  - "{{ ddhcp_short_network }}.111"
+
+ddhcp_network: "{{ ddhcp_short_network }}.0"
+
+ddhcp_gateway: "{{ ddhcp_short_network }}.1"
+
+# Пул адресов выдаваемых DHCP
+ddhcp_pool: "{{ ddhcp_short_network }}.5 {{ ddhcp_short_network }}.254"
+
+# Общий сетевой сегмент, используется для группировки нескольких подсетей
+ddhcp_shared_network: "shared-net"
+
+# IP адреса основной и резервной нод.
+# Задаются в inventary: g_primary_node и g_secondary_node_ip
+ddhcp_primary_node: "{{ g_primary_node | default('false') }}"
+ddhcp_secondary_node_ip: "{{ g_secondary_node_ip }}"

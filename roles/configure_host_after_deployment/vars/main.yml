@@ -1,3 +1,6 @@
 ---
 # Имя домена, которое используется в `Search domains`.
-chad_domain_name: "{{ inventory_hostname.split('.')[1] | default('') }}.{{ inventory_hostname.split('.')[2] | default('') }}"
+chad_domain_name: >-
+  {{ (inventory_hostname.split('.', 1)[1]
+    if inventory_hostname.find('.') != -1
+    else "example.com example.net") }}

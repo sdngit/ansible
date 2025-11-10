@@ -1,0 +1,33 @@
+---
+- name: Include vars/vault_secret.yml
+  ansible.builtin.include_vars: vars/vault_secret.yml
+
+- name: Create a directory /etc/dhcp/dhcpd.d
+  ansible.builtin.file:
+    path: /etc/dhcp/dhcpd.d
+    state: directory
+
+- name: Set /etc/dhcp/dhcpd.d/subnets.conf
+  ansible.builtin.template:
+    src: templates/subnets.conf.j2
+    dest: /etc/dhcp/dhcpd.d/subnets.conf
+    owner: root
+    group: root
+  notify: Restart dhcpd
+
+- name: Set /etc/dhcp/dhcpd.conf
+  ansible.builtin.template:
+    src: templates/dhcpd.conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root
+    group: root
+    mode: '0600'
+    validate: /usr/sbin/dhcpd -t -cf %s
+  notify: Restart dhcpd
+
+- name: Enable and start dhcpd
+  ansible.builtin.systemd_service:
+    name: dhcpd
+    enabled: true
+    state: started
+    daemon_reload: true

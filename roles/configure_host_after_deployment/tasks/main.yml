@@ -26,9 +26,8 @@
     - name: Set a machine-id
       ansible.builtin.shell: >
         > /etc/machine-id
-        && > /var/lib/dbus/machine-id
         && systemd-machine-id-setup
-        && cat /etc/machine-id > /var/lib/dbus/machine-id
+      #  && cat /etc/machine-id > /var/lib/dbus/machine-id
       register: chad_result_set_machine_id
       failed_when: chad_result_set_machine_id.rc != 0
 

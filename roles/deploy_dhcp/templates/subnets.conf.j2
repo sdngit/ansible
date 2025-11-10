@@ -1,0 +1,13 @@
+shared-network {{ ddhcp_shared_network }} {
+    option domain-name-servers {{ ddhcp_dns | join(',') }};
+    option domain-search "{{ ddhcp_domain_search | join(',') }}";
+
+    subnet  {{ ddhcp_network }} netmask {{ ddhcp_netmask }} {
+      option subnet-mask {{ ddhcp_netmask }};
+      option routers {{ ddhcp_gateway }};
+      pool {
+        failover peer "failover-dhcp";
+        range {{ ddhcp_pool }};
+      }
+    }
+}
