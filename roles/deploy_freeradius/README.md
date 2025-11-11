@@ -63,8 +63,8 @@ Example Playbook
 File playbook:
 ```yaml
 - name: Deploy freeradius
-  hosts: freeradius
-  gather_facts: false
+  hosts: all
+  gather_facts: true
   become: yes
   vars_prompt:
     - name: cli_admin_AD_username
@@ -83,6 +83,7 @@ File playbook:
       private: true
 
   roles:
+    - configure_host_after_deployment
     - deploy_freeradius
 ```
 
@@ -90,42 +91,19 @@ File variables:
 
 some_file.yml
 ```YAML
-dfr_net_ifaces: eth0
-
-dfr_dns4_servers:
-  - 192.168.0.51
-  - 192.168.0.52
-  - 192.168.0.53
-
 dfr_domain_controllers:
   - dc1.altdomain.test
   - dc2.altdomain.test
   - dc3.altdomain.test
-
-dfr_radius_clients:
-  Network_test:
-    ipaddr: 192.168.0.0/24
-    secret: "{{ dfr_vault_secret_radius_clients['Network_test'] }}"
-    comment: "network test1"
-  WiFi_test:
-    ipaddr: 192.168.1.0/24
-    secret: "{{ dfr_vault_secret_radius_clients['WiFi_test'] }}"
-    comment: "network test2"
 ```
 
 Run:
 ```bash
-$ ansible-playbook --vault-id test@prompt -i inventory/freeradius.yml deploy_freeradius.yml --ask-pass -u root -l "freeradius.altdomain.test"
-$ ansible-playbook --vault-id test@prompt -i inventory/freeradius.yml deploy_freeradius.yml --ask-pass -u root -l "freeradius.altdomain.test" -e "@some_file.yml"
+$ ansible-playbook --ask-vault-pass -i inventory/freeradius.yml deploy_freeradius.yml --ask-pass -u root -l "freeradius.altdomain.test"
+$ ansible-playbook --vault-id test_deploy_freeradius@prompt -i inventory/freeradius.yml deploy_freeradius.yml --ask-pass -u root -l "freeradius.altdomain.test"
+$ ansible-playbook --vault-id test_deploy_freeradius@prompt -i inventory/freeradius.yml deploy_freeradius.yml --ask-pass -u root -l "freeradius.altdomain.test" -e "@some_file.yml"
 ```
 
 
 License
 -------
-
-
-
-Author Information
-------------------
-
-https://github.com/sdngit

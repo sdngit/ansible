@@ -1,8 +1,8 @@
 ---
 - name: Deploy freeradius
-  hosts: freeradius
-  gather_facts: false
-  become: yes
+  hosts: all
+  gather_facts: true
+  become: true
   vars_prompt:
     - name: cli_admin_AD_username
       prompt: Enter the administrator AD username
@@ -20,4 +20,5 @@
       private: true
 
   roles:
+    - configure_host_after_deployment
     - deploy_freeradius

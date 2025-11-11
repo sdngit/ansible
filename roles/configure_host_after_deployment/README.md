@@ -75,8 +75,8 @@ chad_domain_name: domain.test
 
 Run:
 ```bash
-$ ansible-playbook -i inventory/dhcp_servers.yml configure_host_after_deployment.yml --ask-pass -u root -l "dhcp-test"
-$ ansible-playbook -i inventory/dhcp_servers.yml configure_host_after_deployment.yml --ask-become-pass --ask-pass -u user_name -l "dhcp-test"
+$ ansible-playbook -i inventory/dhcp_servers.yml configure_host_after_deployment.yml --ask-pass -u root -l "dhcp-test" --ssh-common-args '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+$ ansible-playbook -i inventory/dhcp_servers.yml configure_host_after_deployment.yml --ask-become-pass --ask-pass -u user_name -l "dhcp-test" --ssh-common-args '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 ```
 
 

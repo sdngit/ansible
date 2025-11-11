@@ -65,3 +65,7 @@
       ansible.builtin.hostname:
         name: "{{ chad_result_set_hostname.diff.before.split('=')[1] | trim }}"
         use: systemd
+
+    - name: Failed to configure host
+      ansible.builtin.fail:
+        msg: An error occurred while configuring the host.
