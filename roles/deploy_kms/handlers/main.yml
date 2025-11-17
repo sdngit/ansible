@@ -1,0 +1,7 @@
+---
+- name: Restart the vlmcsd service
+  ansible.builtin.systemd_service:
+    name: vlmcsd
+    enabled: true
+    daemon-reload: true
+    state: restarted

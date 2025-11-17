@@ -1,0 +1,15 @@
+[Unit]
+Description=Microsoft KMS Server
+After=network.target
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=vlmcsd
+Group=vlmcsd
+ExecStart=/usr/local/bin/vlmcsd -i /usr/local/etc/vlmcsd/vlmcsd.ini
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,80 @@
+---
+- name: Create group "vlmcsd"
+  ansible.builtin.group:
+    name: vlmcsd
+    state: present
+
+- name: Add user "vlmcsd"
+  user:
+    name: vlmcsd
+    groups: vlmcsd
+    shell: /sbin/nologin
+    create_home: false
+    comment: "vlmcsd nologin User"
+    state: present
+  notify: Restart the vlmcsd service
+
+- name: Copy vlmcsd files to /usr/local/bin/
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: /usr/local/bin/
+    owner: vlmcsd
+    group: vlmcsd
+    mode: '0755'
+  loop:
+    - vlmcs
+    - vlmcsd
+  notify: Restart the vlmcsd service
+
+- name: Create a directory /usr/local/etc/vlmcsd
+  ansible.builtin.file:
+    path: /usr/local/etc/vlmcsd
+    state: directory
+    owner: vlmcsd
+    group: vlmcsd
+    mode: '0755'
+
+- name: Copy vlmcsd files to /usr/local/etc/vlmcsd
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: /usr/local/etc/vlmcsd
+    owner: vlmcsd
+    group: vlmcsd
+    mode: '0644'
+  loop:
+    - vlmcsd.kmd
+    - vlmcsd.ini
+  notify: Restart the vlmcsd service
+
+- name: Create a directory /var/log/vlmcsd
+  ansible.builtin.file:
+    path: /var/log/vlmcsd
+    state: directory
+    owner: vlmcsd
+    group: vlmcsd
+    mode: '0750'
+  notify: Restart the vlmcsd service
+
+- name: Create a directory /var/run/vlmcsd
+  ansible.builtin.file:
+    path: /var/run/vlmcsd
+    state: directory
+    owner: vlmcsd
+    group: vlmcsd
+    mode: '0750'
+  notify: Restart the vlmcsd service
+
+- name: Copy service file to /etc/systemd/system/vlmcsd.service
+  ansible.builtin.copy:
+    src: files/vlmcsd.service
+    dest: /etc/systemd/system/vlmcsd.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart the vlmcsd service
+
+- name: Start the vlmcsd service
+  ansible.builtin.systemd_service:
+    name: vlmcsd
+    daemon-reload: true
+    state: started
