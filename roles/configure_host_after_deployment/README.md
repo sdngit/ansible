@@ -7,7 +7,7 @@ Role Description
 Назначет хосту имя в соответствии с тем, как он указан в `inventory`. \
 Если текущий `hostname` хоста отличается от указанного в `inventory` так же будут заменены `SSH ключи` и `machine-id`.
 
-> [!CAUTION]
+> [!WARNING]
 > Тестировалось на:
 > RedOS 8
 
