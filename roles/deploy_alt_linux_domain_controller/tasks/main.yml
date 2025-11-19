@@ -26,6 +26,9 @@
   tags: daldc_create_DC
 
 - name: Configure replication
-  ansible.builtin.include_tasks: configure_replication.yml
+  ansible.builtin.include_tasks:
+    file: configure_replication.yml
+    apply:
+      tags: daldc_configure_replication
   when: daldc_create_domain | bool == false
   tags: daldc_configure_replication
