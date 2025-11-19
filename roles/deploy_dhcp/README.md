@@ -6,7 +6,7 @@ Role Description
 Разворачивает отказоустойчивый DHCP сервер.
 
 
-> [!WARNING]
+> [!IMPORTANT]
 > Тестировалось на:
 > - RedOS 8
 

@@ -6,7 +6,7 @@ Role Description
 Развернуть KMS.
 
 
-> [!WARNING]
+> [!IMPORTANT]
 > Тестировалось на:
 > - RedOS 7
 > - RedOS 8

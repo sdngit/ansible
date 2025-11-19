@@ -6,7 +6,7 @@ Role Description
 Разворачивает `FreeRadius` сервер и настраивает доменную авторизацию через `winbind`.
 
 
-> [!WARNING]
+> [!IMPORTANT]
 > Тестировалось на RedOS 8.
 
 
