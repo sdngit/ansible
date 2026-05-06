@@ -1,0 +1,8 @@
+---
+- name: Install packages
+  ansible.builtin.import_tasks: install_packages.yml
+  tags: ahtf_install_packages
+
+- name: Register a host in Foreman
+  ansible.builtin.import_tasks: register_host.yml
+  tags: ahtf_register_host

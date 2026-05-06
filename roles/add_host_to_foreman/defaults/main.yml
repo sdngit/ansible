@@ -1,0 +1,16 @@
+---
+# Smart Proxy, через который работает хост.
+# Либо основной сервер Foreman.
+ahtf_foreman_server: frmn-prd-mng01.rt-dc.local
+
+# Ключи активации, используемые для развертывания.
+# Может быть список, разделенный запятыми.
+ahtf_activation_keys: ak-redos80-dev
+
+ahtf_organization: RTDC
+ahtf_location: "Default Location"
+
+ahtf_managed_host: false
+
+# В режиме работы Pull хост сам обращается к серверу для получения задач.
+ahtf_remote_execution_pull: true

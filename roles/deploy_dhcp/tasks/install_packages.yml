@@ -3,16 +3,12 @@
   ansible.builtin.apt:
     update_cache: yes
     cache_valid_time: 3600
-  when: >
-    ansible_pkg_mgr == "apt"
-    or ansible_pkg_mgr == "apt_rpm"
+  when: ansible_pkg_mgr in ['apt', 'apt_rpm']
 
 - name: Installing packages via DNF/YUM
   ansible.builtin.dnf:
     update_cache: yes
-  when: >
-    ansible_pkg_mgr == "dnf"
-    or ansible_pkg_mgr == "yum"
+  when: ansible_pkg_mgr in ['dnf', 'yum']
 
 - name: Install packages
   ansible.builtin.package:

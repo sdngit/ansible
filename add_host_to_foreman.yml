@@ -1,0 +1,37 @@
+---
+- name: Add a host to Foreman-Katello
+  hosts: all
+  gather_facts: true
+  become: true
+  vars_prompt:
+    - name: cli_foreman_username
+      prompt: Enter Foreman username
+      private: false
+
+    - name: cli_foreman_password
+      prompt: Enter password
+      unsafe: true
+      private: true
+
+    - name: cli_foreman_password_retype
+      prompt: Re-type password
+      unsafe: true
+      private: true
+
+  pre_tasks:
+    - name: Check the variable cli_foreman_password
+      ansible.builtin.assert:
+        that:
+          - cli_foreman_password | length > 0
+        fail_msg: The variable is empty!
+        quiet: true
+
+    - name: Checking password matches
+      ansible.builtin.assert:
+        that:
+          - cli_foreman_password == cli_foreman_password_retype
+        fail_msg: Sorry, passwords do not match.
+        quiet: true
+
+  roles:
+    - add_host_to_foreman

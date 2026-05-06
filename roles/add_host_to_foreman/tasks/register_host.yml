@@ -1,0 +1,43 @@
+---
+- name: Create a host in Foreman
+  theforeman.foreman.host:
+    username: "{{ ahtf_username }}"
+    password: "{{ ahtf_password }}"
+    server_url: "https://{{ ahtf_foreman_server }}"
+    name: "{{ ansible_fqdn }}"
+    organization: "{{ ahtf_organization }}"
+    location: "{{ ahtf_location }}"
+    activation_keys: "{{ ahtf_activation_keys }}"
+    managed: "{{ ahtf_managed_host }}"
+    operatingsystem: "{{ ahtf_operating_system }}"
+    state: present
+  no_log: true
+
+- name: Generate registration command
+  theforeman.foreman.registration_command:
+    username: "{{ ahtf_username }}"
+    password: "{{ ahtf_password }}"
+    server_url: "https://{{ ahtf_foreman_server }}"
+    activation_keys: "{{ ahtf_activation_keys }}"
+    operatingsystem: "{{ ahtf_operating_system }}"
+    setup_remote_execution_pull: "{{ ahtf_remote_execution_pull }}"
+  register: ahtf_registration_command
+  changed_when: false
+  no_log: true
+
+- name: Host registration in Foreman
+  ansible.builtin.shell:
+    cmd: "{{ ahtf_registration_command.registration_command }}"
+  register: ahtf_host_registration
+  changed_when:
+    - "'The system has been registered with ID' in ahtf_host_registration.stdout"
+  failed_when:
+    - ahtf_host_registration.rc != 0
+    - "'already installed' not in ahtf_host_registration.stdout"
+
+- name: Enable and start services
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop: "{{ ahtf_service_pull_mode }}"

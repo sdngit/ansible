@@ -1,0 +1,25 @@
+---
+ahtf_install_packages:
+  dnf:
+    - "http://{{ ahtf_foreman_server }}/pub/katello-ca-consumer-latest.noarch.rpm"
+    - katello-host-tools
+    - katello-host-tools-tracer
+
+ahtf_services:
+  - rhsm-facts.service
+  - rhsmcertd.service
+  - rhsm.service
+
+# Логин/пароль для авторизации на сервере Foreman
+ahtf_username: "{{ cli_foreman_username }}"
+ahtf_password: "{{ cli_foreman_password }}"
+
+# Название ОС должно совпадать с Title в Foreman
+ahtf_operating_system: "{{ ansible_os_family }} {{ ansible_distribution_major_version }}"
+
+# В режиме работы Pull хост сам обращается к серверу для получения задач
+ahtf_install_package_pull_mode:
+  - katello-pull-transport-migrate
+
+ahtf_service_pull_mode:
+  - yggdrasild.service
