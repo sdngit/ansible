@@ -1,0 +1,32 @@
+{# Заголовок в файле #}
+Hostname;IP;OS;OS version;Package;Version;Source;vCPUs;RAM (GB);System disk;Data disk
+
+{%- for host in ansible_play_hosts %}
+    {%- set host_info = hostvars[host]['ghi_collected_host_info'] -%}
+
+    {# Собираем список data disks #}
+    {%- set data_disks_list = [] %}
+    {%- for disk_name, disk_info in host_info.disks.items() %}
+        {%- if disk_name != host_info.system_disk_name %}
+            {%- set _ = data_disks_list.append(disk_name ~ ' = ' ~ disk_info.size) %}
+        {%- endif %}
+    {%- endfor %}
+    {%- set data_disks_string = data_disks_list | join(', ') %}
+
+    {# Формируем запись в файле #}
+    {%- for pkg in host_info.packages -%}
+        {{ [
+            host_info.hostname,
+            host_info.ip,
+            host_info.os,
+            host_info.os_version,
+            pkg.key,
+            (pkg.value[0].version | default('')),
+            (pkg.value[0].source | default('')),
+            host_info.cpu,
+            host_info.ram,
+            (host_info.disks[host_info.system_disk_name].size | default('N/A')),
+            data_disks_string
+        ] | join(';') }}
+    {%- endfor %}
+{%- endfor %}

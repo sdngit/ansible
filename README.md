@@ -1,27 +1,37 @@
 # Ansible roles
 
-1. Роль `deploy_alt_linux_domain_controller`.\
+1. `deploy_alt_linux_domain_controller`\
 Разворачивает новый Samba домен на Alt Linux 11 или добавляет в существующий.\
 При запуске плэйбука будут запрошены логин администратора (по умолчанию "administrator") и пароль.\
 При создании нового домена автоматически создается учетная запись с именем "administrator". Изменить это поведение нельзя.
 
-2. Роль `configure_ntp_chrony`.\
+2. `configure_ntp_chrony`\
 Настраивает синхронизацию времени с помощью `Chrony` в режиме сервера.
 
-3. Роль `deploy_freeradius`.\
+3. `deploy_freeradius`\
 Разворачивает `FreeRadius` сервер и настраивает доменную авторизацию через `winbind`.
 
-4. Роль `configure_host_after_deployment`.\
+4. `configure_host_after_deployment`\
 Настраивает `DNS`. \
 Назначет хосту имя в соответствии с тем, как он указан в `inventory`. \
 Если текущий `hostname` хоста отличается от указанного в `inventory` так же будут заменены `SSH ключи` и `machine-id`.
 
-5. Роль `deploy_dhcp`.\
+5. `deploy_dhcp`\
 Разворачивает отказоустойчивый DHCP сервер.
 
-6. Роль `get_info_about_installed_packages`.\
-Проверяет, установлен ли указанный пакет на хосте.\
-На хосте, на котором запускается роль Ansible, будет создан файл с найденной информацией.
+6. `get_host_info`\
+Собирает информацию на хосте:\
+- Имя хоста
+- IP
+- ОС
+- Установленные пакеты
+- CPU
+- RAM
+- Объем дисков
 
-7. Роль `deploy_kms`.\
+7. `deploy_kms`\
 Разворачивает KMS сервер.
+
+8. `add_host_to_foreman`\
+
+Добавляет хост в Foreman.
