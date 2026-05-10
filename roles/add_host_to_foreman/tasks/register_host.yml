@@ -1,5 +1,6 @@
 ---
 - name: Create a host in Foreman
+  delegate_to: localhost
   theforeman.foreman.host:
     username: "{{ ahtf_username }}"
     password: "{{ ahtf_password }}"
@@ -14,12 +15,13 @@
   no_log: true
 
 - name: Generate registration command
+  delegate_to: localhost
+  run_once: true
   theforeman.foreman.registration_command:
     username: "{{ ahtf_username }}"
     password: "{{ ahtf_password }}"
     server_url: "https://{{ ahtf_foreman_server }}"
     activation_keys: "{{ ahtf_activation_keys }}"
-    operatingsystem: "{{ ahtf_operating_system }}"
     setup_remote_execution_pull: "{{ ahtf_remote_execution_pull }}"
   register: ahtf_registration_command
   changed_when: false
