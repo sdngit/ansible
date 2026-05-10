@@ -1,49 +1,6 @@
 ---
-- name: Gather the package facts
-  ansible.builtin.package_facts:
-    manager: auto
+- name: Get host information
+  ansible.builtin.import_tasks: get_info.yml
 
-- name: Get size installed RAM
-  ansible.builtin.shell: |
-    dmidecode -t memory | grep 'Size:' | grep -v 'No Module Installed' | awk '{sum+=$2} END {print sum}'
-  become: true
-  register: ghi_total_installed_ram
-  changed_when: false
-
-- name: Save host info
-  ansible.builtin.set_fact:
-    ghi_collected_host_info:
-      hostname: "{{ inventory_hostname }}"
-      ip: "{{ ansible_default_ipv4.address | default('N/A') }}"
-      os: "{{ ansible_distribution }}"
-      os_version: "{{ ansible_distribution_version }}"
-      cpu: "{{ ansible_processor_vcpus | default(0) }}"
-      ram: "{{ ghi_total_installed_ram.stdout | default('0') }}"
-      packages: >-
-        {{ ansible_facts.packages
-          | dict2items
-          | selectattr('key', 'match', ghi_package_name_regex | join('|'))
-          | list }}
-      disks: >-
-        {{ ansible_devices
-          | dict2items
-          | rejectattr('key', 'match', '^(fd|loop|sr|ram|dm-|zram)')
-          | items2dict }}
-      system_disk_name: >-
-        {{
-          ansible_mounts
-          | selectattr('mount', '==', '/')
-          | map(attribute='device')
-          | first
-          | basename
-          | regex_replace('p?[0-9]+$', '')
-        }}
-
-- name: Create CSV file with info
-  run_once: true
-  delegate_to: localhost
-  ansible.builtin.template:
-    src: file_info.csv.j2
-    dest: "{{ ghi_file_info_path }}"
-    trim_blocks: true
-    lstrip_blocks: true
+- name: Create report
+  ansible.builtin.import_tasks: create_report.yml

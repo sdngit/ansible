@@ -18,8 +18,10 @@ Role Description
 > [!CAUTION]
 > Тестировалось на:\
 > - RedOS
+> - RHEL
 > - Debian
-> - Alt Linux
+> - CentOS
+> - OracleLinux
 
 
 ## Использование роли
@@ -56,7 +58,7 @@ File playbook:
   gather_facts: true
   become: false
   roles:
-    - get_info_about_installed_packages
+    - get_host_info
 ```
 
 File variables:
@@ -69,9 +71,9 @@ ghi_file_info_path: ~/file_info.csv
 
 Run:
 ```bash
-$ ansible-playbook -i inventory/ get_info_about_installed_packages.yml --ask-pass -u user_name
-$ ansible-playbook get_info_about_installed_packages.yml -e '{"ghi_package_name_regex": ["^docker"]}'
-$ ansible-playbook get_info_about_installed_packages.yml -e '{"ghi_package_name_regex": ["^docker"],"ghi_file_info_path": "./file_info_docker.csv"}'
+$ ansible-playbook -i inventory/ get_host_info.yml --ask-pass -u user_name
+$ ansible-playbook get_host_info.yml -e '{"ghi_package_name_regex": ["^docker"]}'
+$ ansible-playbook get_host_info.yml -e '{"ghi_package_name_regex": ["^docker"],"ghi_file_info_path": "./file_info_docker.csv"}'
 ```
 
 

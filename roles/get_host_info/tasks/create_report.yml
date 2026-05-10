@@ -1,0 +1,8 @@
+---
+- name: Create CSV file
+  run_once: true
+  delegate_to: localhost
+  ansible.builtin.template:
+    src: file_info.csv.j2
+    dest: "{{ ghi_file_info_path }}"
+    lstrip_blocks: true
